@@ -15,7 +15,8 @@ enum { R_AL, R_CL, R_DL, R_BL, R_AH, R_CH, R_DH, R_BH };
  */
 
 typedef struct {
-
+  //使用union结构，各变量互斥，而且共享同一内存首地址，从而实现寄存器结构
+  //比如EAX的低16位是ax
   union{
     union {
       uint32_t _32;
