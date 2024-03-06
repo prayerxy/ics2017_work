@@ -38,6 +38,13 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+//add some functions in pa1
+static int cmd_si(char *args);
+static int cmd_info(char *args);
+static int cmd_p(char *args);
+static int cmd_x(char *args);
+static int cmd_w(char *args);
+static int cmd_d(char *args);
 static struct {
   char *name;
   char *description;
@@ -48,7 +55,12 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 
   /* TODO: Add more commands */
-
+  { "si", "args:[N]; Execute N instructions step by step ",cmd_si},
+  { "info","args:r/w; Use info r to print status about registers,use info w to print status about watchpoints",cmd_info},
+  { "p", "args:expr; Compute the value of expressions",cmd_p},
+  { "x", "args: N expr; scan the memory from address EXPR",cmd_x},
+  { "w", "args:expr; set the watchpoint,pause the program when value of expr changes",cmd_w},
+  { "d", "args: N; delete watchpoint that index is N",cmd_d}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -75,6 +87,8 @@ static int cmd_help(char *args) {
   }
   return 0;
 }
+
+
 
 void ui_mainloop(int is_batch_mode) {
   if (is_batch_mode) {
