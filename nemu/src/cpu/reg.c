@@ -18,6 +18,7 @@ void reg_test() {
   for (i = R_EAX; i <= R_EDI; i ++) {
     sample[i] = rand();
     reg_l(i) = sample[i];
+    //reg_l实际上是regsl中标识的寄存器，reg_w是regsw标识的寄存器，大致是检查32位的低16位
     assert(reg_w(i) == (sample[i] & 0xffff));
   }
 

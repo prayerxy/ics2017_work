@@ -104,6 +104,7 @@ static inline void parse_args(int argc, char *argv[]) {
   }
 }
 
+//和monitor相关的初始化工作
 int init_monitor(int argc, char *argv[]) {
   /* Perform some global initialization. */
 
@@ -114,6 +115,7 @@ int init_monitor(int argc, char *argv[]) {
   init_log();
 
   /* Test the implementation of the `CPU_state' structure. */
+  //生成随机数，测试寄存器结构的正确性
   reg_test();
 
 #ifdef DIFF_TEST
@@ -122,9 +124,11 @@ int init_monitor(int argc, char *argv[]) {
 #endif
 
   /* Load the image to memory. */
+  //读入带有客户程序的镜像文件
   load_img();
 
   /* Initialize this virtual computer system. */
+  //模拟计算机启动
   restart();
 
   /* Compile the regular expressions. */
