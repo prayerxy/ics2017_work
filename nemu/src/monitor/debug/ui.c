@@ -28,7 +28,7 @@ char* rl_gets() {
 }
 
 static int cmd_c(char *args) {
-  cpu_exec(-1);
+  cpu_exec(-1);//传入-1,是uint64_t中的最大值
   return 0;
 }
 
