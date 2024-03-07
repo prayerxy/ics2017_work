@@ -20,4 +20,14 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 
-
+void print_WPinfo(){
+  WP* tmp = head;
+	if(!tmp){
+		printf("no watchpoint is in use..!\n");
+		return;
+	}
+	while(tmp){
+		printf("%d   ,%s  ,%d  \n", tmp->NO, tmp->expr, tmp->value);
+		tmp = tmp -> next;
+	}
+}

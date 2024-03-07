@@ -95,7 +95,7 @@ static int cmd_si(char *args){
     cpu_exec(1);
   }
   else{
-    int N=atoi(arg);
+    int N=atoi(arg);//atoi可以转换负数
     if(N<=0){
       printf("Error in cmd_si!\n");
       return 0;
@@ -105,6 +105,21 @@ static int cmd_si(char *args){
   return 0;
 }
 static int cmd_info(char *args){
+  char *arg = strtok(NULL, " ");
+  if(arg==NULL){
+    printf("Error in cmd_info!\n");
+    return 0;
+  }
+  else if(strcmp(arg,"r")){
+    //这里只打印eax等32位的寄存器
+    for(int i=0;i<8;i++)printf("%s  0x%x\n",regsl[i],reg_l(i));
+    printf("eip  0x%x\n",cpu.eip);
+  }
+  else if(strcmp(arg,"w")){
+    //打印监视点的信息
+    print_WPinfo();
+  }
+
   return 0;
 }
 static int cmd_p(char *args){
