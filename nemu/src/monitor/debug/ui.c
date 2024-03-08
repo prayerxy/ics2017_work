@@ -141,12 +141,12 @@ static int cmd_x(char *args){
     return 0;
   }
   //使用expr函数
-  bool success;
-  uint32_t addr=expr(arg2,&success);
-  if(success==false){
-    printf("something errors in expr()!\n");
-    return 0;
-  }
+  //bool success;
+  uint32_t addr=strtoul(arg2,NULL,16);
+  // if(success==false){
+  //   printf("something errors in expr()!\n");
+  //   return 0;
+  // }
   for(int i=0;i<N;i++){
     //打印地址
     printf("0x%x:\t",addr);
