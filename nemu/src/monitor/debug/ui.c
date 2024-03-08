@@ -113,7 +113,7 @@ static int cmd_info(char *args){
   else if(strcmp(arg,"r")==0){
     //这里只打印eax等32位的寄存器
     for(int i=0;i<8;i++)printf("%s\t0x%x\n",regsl[i],reg_l(i));
-    printf("eip\t0x%x\n",cpu.eip);
+    printf("eip\t0x%08x\n",cpu.eip);
   }
   else if(strcmp(arg,"w")==0){
     //打印监视点的信息 todo
