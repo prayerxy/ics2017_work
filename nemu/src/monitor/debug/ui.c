@@ -127,24 +127,38 @@ static int cmd_p(char *args){
   return 0;
 }
 static int cmd_x(char *args){
+  //扫描内存
+  //x N EXPR
   char *arg1 = strtok(NULL, " ");
   if(arg1==NULL){
-    printf("u shall input the parameter N to specify the consecutive N..\n");
+    printf("the first param must be N to specify the N 4bytes!\n");
     return 0;
   }
-  int i_arg1 = atoi(arg1);
-  char *arg2 = strtok(NULL, " ");
-  /* TODO: now i just implement the function given accurate number, must fix it in 1-2 or 1-3*/
+  int N=atoi(arg1);
+  char *arg2=strtok(NULL," ");
   if(arg2==NULL){
-    printf("u shall input the parameter EXPR must generate from keyboard input..!\n");
+    printf("the second param must be an EXPR!\n");
     return 0;
   }
-  uint32_t addr_begin = strtoul(arg2,NULL,16);
-  for(int i=0;i<i_arg1;i++){
-    printf("0x%x ", vaddr_read(addr_begin,1));
-    addr_begin+=1;
+  //使用expr函数
+  //bool success;
+  uint32_t addr=strtoul(arg2,NULL,16);;
+  // if(success==false){
+  //   printf("something errors in expr()!\n");
+  //   return 0;
+  // }
+  for(int i=0;i<N;i++){
+    //打印地址
+    printf("0x%x:\t",addr);
+    //打印地址对应的值 一次性打印4bytes
+    for(int j=0;j<4;j++){
+      printf("0x%x ", vaddr_read(addr,1));
+      addr++;
+    }
+    printf("\n");
   }
-  printf("\n");
+
+
   return 0;
 }
 static int cmd_w(char *args){
