@@ -143,6 +143,7 @@ static int cmd_x(char *args){
   //使用expr函数
   //bool success;
   uint32_t addr=strtoul(arg2,NULL,16);
+  uint32_t addr2=addr;
   // if(success==false){
   //   printf("something errors in expr()!\n");
   //   return 0;
@@ -150,15 +151,15 @@ static int cmd_x(char *args){
   for(int i=0;i<N;i++){
     //打印地址
     printf("0x%x:\t",addr);
-    //打印地址对应的值 一次性打印4bytes
-    // for(int j=0;j<4;j++){
-    //   //2位宽度
-    //   printf("0x%02x ", vaddr_read(addr,1));
-    //   addr++;
-    // }
-   
-    printf("0x%08x",vaddr_read(addr,4));
-    addr+=4;
+    //打印地址对应的值 一次性打印1bytes
+    for(int j=0;j<4;j++){
+      //2位宽度
+      printf("0x%02x ", vaddr_read(addr,1));
+      addr++;
+    }
+    printf("\t");
+    printf("0x%08x",vaddr_read(addr2,4));
+    addr2+=4;
     printf("\n");
   }
   
