@@ -7,10 +7,10 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ
-
+  TK_NOTYPE = 256,
   /* TODO: Add more token types */
-
+  TK_DEX,TK_HEX,TK_REG,
+  TK_EQ,TK_NEQ,TK_AND,TK_OR,TK_NOT
 };
 
 static struct rule {
@@ -23,8 +23,22 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
-  {"==", TK_EQ}         // equal
+  {"\\*", '*'},          // multi/getval
+  {"\\/", '/'},          // div
+  {"\\+", '+'},          // plus
+  {"\\-", '-'},          // minus
+  {"!",TK_NOT},
+  {"==", TK_EQ},         // equal
+  {"\\|\\|", TK_OR},        // calc-or
+  {"&&", TK_AND},         // calc-and
+  {"==", TK_EQ},         // equal
+  {"!=", TK_NEQ},        // not-equal
+  {"0|[1-9][0-9]*",TK_DEX},
+  {"0[xX][1-9A-Fa-f][0-9A-Fa-f]*",TK_HEX},
+  {"\\$(eax|ebx|ecx|edx|esp|ebp|esi|edi|eip|ax|bx|cx|dx|sp|bp|si|di|al|bl|cl|dl|ah|bh|ch|dh)",TK_REG},
+  {"\\(", '('},       
+  {"\\)", ')'},         
+
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -53,8 +67,30 @@ typedef struct token {
   char str[32];
 } Token;
 
-Token tokens[32];
-int nr_token;
+Token tokens[32];//按顺序存放已经被识别出的token信息
+int nr_token;//指示已经被识别出的token数目
+
+//识别一个表达式是否被一对匹配的括号包围着
+bool check_parentheses(int p,int q){
+  if(p>=q){
+    printf("p>=q is impossible!\n");
+    return false;
+  }
+  if(tokens[p].type!='('||tokens[q].type!=')'){
+    return false;
+  }
+  int count=0;
+  for(int i=p;i<=q;i++){
+    if(tokens[i].type=='(')count++;
+    else if(tokens[i].type==')'){
+      if(count>0)count--;
+      else return false;//此时count<=0且多一个)
+    }
+  }
+  return count==0;
+}
+
+//dominant Operator todo
 
 static bool make_token(char *e) {
   int position = 0;
@@ -65,11 +101,12 @@ static bool make_token(char *e) {
 
   while (e[position] != '\0') {
     /* Try all rules one by one. */
+    //遍历所有规则
     for (i = 0; i < NR_REGEX; i ++) {
       if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
-
+        //log输出匹配成功的信息
         Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
             i, rules[i].regex, position, substr_len, substr_len, substr_start);
         position += substr_len;
@@ -78,11 +115,30 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
-        switch (rules[i].token_type) {
-          default: TODO();
+        if(substr_len>32){
+          //处理溢出
+          assert(0);
         }
-
+        switch (rules[i].token_type) {
+          case TK_NOTYPE:break;
+          case TK_DEX:
+            memcpy(tokens[nr_token].str,substr_start,substr_len);
+            tokens[nr_token].str[substr_len]='\0';
+            tokens[nr_token].type = rules[i].token_type;
+            nr_token++;
+            break;
+          case TK_HEX:
+            memcpy(tokens[nr_token].str,substr_start+2,substr_len-2);
+            tokens[nr_token].str[substr_len-2]='\0';
+            tokens[nr_token].type = rules[i].token_type;
+            nr_token++;
+            break;
+          case TK_REG:
+          default: 
+            tokens[nr_token].type = rules[i].token_type;
+            nr_token++;
+            break;
+        }
         break;
       }
     }
