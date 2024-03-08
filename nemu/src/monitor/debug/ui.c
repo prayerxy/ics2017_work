@@ -117,6 +117,7 @@ static int cmd_info(char *args){
   }
   else if(strcmp(arg,"w")){
     //打印监视点的信息 todo
+    printf("hell\n");
     print_WPinfo();
   }
 
