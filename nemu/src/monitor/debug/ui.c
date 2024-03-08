@@ -8,7 +8,7 @@
 #include <readline/history.h>
 
 void cpu_exec(uint64_t);
-
+void print_WPinfo();
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 char* rl_gets() {
   static char *line_read = NULL;
@@ -58,7 +58,7 @@ static struct {
   { "si", "args:[N]; Execute N instructions step by step ",cmd_si},
   { "info","args:r/w; Use info r to print status about registers,use info w to print status about watchpoints",cmd_info},
   { "p", "args:expr; Compute the value of expressions",cmd_p},
-  { "x", "args: N expr; scan the memory from address EXPR",cmd_x},
+  { "x", "args: N expr; scan the N 4bytes memory from address EXPR",cmd_x},
   { "w", "args:expr; set the watchpoint,pause the program when value of expr changes",cmd_w},
   { "d", "args: N; delete watchpoint that index is N",cmd_d}
 };
@@ -116,16 +116,35 @@ static int cmd_info(char *args){
     printf("eip  0x%x\n",cpu.eip);
   }
   else if(strcmp(arg,"w")){
-    //打印监视点的信息
+    //打印监视点的信息 todo
     print_WPinfo();
   }
 
   return 0;
 }
 static int cmd_p(char *args){
+  //todo 表达式求值
   return 0;
 }
 static int cmd_x(char *args){
+  char *arg1 = strtok(NULL, " ");
+  if(arg1==NULL){
+    printf("u shall input the parameter N to specify the consecutive N..\n");
+    return 0;
+  }
+  int i_arg1 = atoi(arg1);
+  char *arg2 = strtok(NULL, " ");
+  /* TODO: now i just implement the function given accurate number, must fix it in 1-2 or 1-3*/
+  if(arg2==NULL){
+    printf("u shall input the parameter EXPR must generate from keyboard input..!\n");
+    return 0;
+  }
+  uint32_t addr_begin = strtoul(arg2,NULL,16);
+  for(int i=0;i<i_arg1;i++){
+    printf("0x%x ", vaddr_read(addr_begin,1));
+    addr_begin+=1;
+  }
+  printf("\n");
   return 0;
 }
 static int cmd_w(char *args){

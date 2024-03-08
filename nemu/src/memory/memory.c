@@ -18,7 +18,7 @@ uint32_t paddr_read(paddr_t addr, int len) {
 void paddr_write(paddr_t addr, int len, uint32_t data) {
   memcpy(guest_to_host(addr), &data, len);
 }
-
+//访问内存的函数 addr内存首地址 len代表读取内存的字节数
 uint32_t vaddr_read(vaddr_t addr, int len) {
   return paddr_read(addr, len);
 }
