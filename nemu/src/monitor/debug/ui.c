@@ -152,7 +152,7 @@ static int cmd_x(char *args){
     printf("0x%x:\t",addr);
     //打印地址对应的值 一次性打印4bytes
     for(int j=0;j<4;j++){
-      printf("0x%x ", vaddr_read(addr,1));
+      printf("0x%02x ", vaddr_read(addr,1));
       addr++;
     }
     printf("\n");
