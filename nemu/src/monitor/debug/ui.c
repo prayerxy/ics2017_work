@@ -111,8 +111,8 @@ static int cmd_info(char *args){
     return 0;
   }
   else if(strcmp(arg,"r")==0){
-    //这里只打印eax等32位的寄存器
-    for(int i=0;i<8;i++)printf("%s\t0x%x\n",regsl[i],reg_l(i));
+    //这里只打印eax等32位的寄存器 
+    for(int i=0;i<8;i++)printf("%s\t0x%08x\n",regsl[i],reg_l(i));
     printf("eip\t0x%08x\n",cpu.eip);
   }
   else if(strcmp(arg,"w")==0){
