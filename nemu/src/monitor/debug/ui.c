@@ -141,13 +141,13 @@ static int cmd_x(char *args){
     return 0;
   }
   //使用expr函数
-  //bool success;
-  uint32_t addr=strtoul(arg2,NULL,16);
+  bool success;
+  uint32_t addr=expr(arg2,&success);
   uint32_t addr2=addr;
-  // if(success==false){
-  //   printf("something errors in expr()!\n");
-  //   return 0;
-  // }
+  if(success==false){
+    printf("something errors in expr()!\n");
+    return 0;
+  }
   for(int i=0;i<N;i++){
     //打印地址
     printf("0x%x:\t",addr);
@@ -158,11 +158,11 @@ static int cmd_x(char *args){
       addr++;
     }
     printf("\t");
+    //一次性打印4bytes  小段字节序 低位在低地址
     printf("0x%08x",vaddr_read(addr2,4));
     addr2+=4;
     printf("\n");
   }
-  
   return 0;
 }
 static int cmd_w(char *args){
