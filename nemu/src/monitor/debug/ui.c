@@ -123,7 +123,19 @@ static int cmd_info(char *args){
   return 0;
 }
 static int cmd_p(char *args){
-  //todo 表达式求值
+  //表达式求值
+  char *arg=strtok(NULL," ");
+  if(arg==NULL){
+    printf("please enter the expr you want to compute!\n");
+    return 0;
+  }
+  bool success;
+  uint32_t res=expr(arg,&success);
+  if(!success){
+    printf("please check your expr!\n");
+    return 0;
+  }
+  printf("the value of expr is: %d\n",res);
   return 0;
 }
 static int cmd_x(char *args){
