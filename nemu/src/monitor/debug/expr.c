@@ -190,23 +190,22 @@ static bool make_token(char *e) {
       printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
       return false;
     }
-    if(tokens[0].type=='-')
-      {tokens[0].type=TK_NEGATIVE;printf("yes\n");}
-    if(tokens[0].type=='*')
-      tokens[0].type=TK_GETVAL;
-    for(int i=1;i<nr_token;i++){
-      if(tokens[i].type=='*'){
-        if(tokens[i-1].type!=')'&&Oprt_priority(i-1)<14)
-          tokens[i].type=TK_GETVAL;//解引用
-      }
-      if(tokens[i].type=='-'){
-        if(tokens[i-1].type!=')'&&Oprt_priority(i-1)<14)
-          {tokens[i].type=TK_NEGATIVE;printf("yes\n");}
-      }
-    }
     
   }
-
+  if(tokens[0].type=='-')
+    tokens[0].type=TK_NEGATIVE;
+  if(tokens[0].type=='*')
+    tokens[0].type=TK_GETVAL;
+  for(int i=1;i<nr_token;i++){
+    if(tokens[i].type=='*'){
+      if(tokens[i-1].type!=')'&&Oprt_priority(i-1)<14)
+        tokens[i].type=TK_GETVAL;//解引用
+    }
+    if(tokens[i].type=='-'){
+      if(tokens[i-1].type!=')'&&Oprt_priority(i-1)<14)
+        tokens[i].type=TK_NEGATIVE;
+    }
+  }
   return true;
 }
 
