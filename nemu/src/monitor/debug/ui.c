@@ -135,7 +135,7 @@ static int cmd_p(char *args){
     printf("please check your expr!\n");
     return 0;
   }
-  printf("the value of expr is: %d(0x%08x)\n",res,res);
+  printf("the value of expr is: %d(0x%x)\n",res,res);
   return 0;
 }
 static int cmd_x(char *args){
