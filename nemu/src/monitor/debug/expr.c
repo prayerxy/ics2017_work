@@ -289,6 +289,7 @@ static uint32_t eval(int p,int q){
       else return 1;
     }
     //双目表达式
+    printf("p %d q %d\n",p,op-1);
     uint32_t val1=eval(p,op-1);
     switch (tokens[op].type) {
       case '+': return val1+val2;
