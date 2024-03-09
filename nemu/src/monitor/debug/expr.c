@@ -276,7 +276,7 @@ static uint32_t eval(int p,int q){
     //单目表达式
     printf("%d \n",val2);
     if(tokens[op].type==TK_NEGATIVE){
-      //printf("%d\n",val2);
+      printf("%d\n",-val2);
       return -val2;
     }
     else if(tokens[op].type==TK_GETVAL){
