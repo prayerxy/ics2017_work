@@ -279,6 +279,8 @@ static uint32_t eval(int p,int q){
     }
     else if(tokens[op].type==TK_GETVAL){
       printf("getval   %x\n",val2);
+      uint32_t res=vaddr_read(val2,4);
+      printf(" get the value=%d(0x%08x) of address=%u(0x%x)",res,res,val2,val2);
       return vaddr_read(val2,4);
     }
     else if(tokens[op].type=='!'){
