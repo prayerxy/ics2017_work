@@ -191,7 +191,7 @@ static bool make_token(char *e) {
       return false;
     }
     if(tokens[0].type=='-')
-      tokens[0].type=TK_NEGATIVE;
+      {tokens[0].type=TK_NEGATIVE;printf("yes\n");}
     if(tokens[0].type=='*')
       tokens[0].type=TK_GETVAL;
     for(int i=1;i<nr_token;i++){
@@ -201,10 +201,10 @@ static bool make_token(char *e) {
       }
       if(tokens[i].type=='-'){
         if(tokens[i-1].type!=')'&&Oprt_priority(i-1)<14)
-          tokens[i].type=TK_NEGATIVE;
+          {tokens[i].type=TK_NEGATIVE;printf("yes\n");}
       }
     }
-
+    
   }
 
   return true;
