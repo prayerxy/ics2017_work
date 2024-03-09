@@ -112,6 +112,7 @@ static int cmd_info(char *args){
   }
   else if(strcmp(arg,"r")==0){
     //这里只打印32位的寄存器 
+    printf("reg\t16进制\t10进制\n");
     for(int i=0;i<8;i++)printf("%s\t0x%08x\t%d\n",regsl[i],reg_l(i),reg_l(i));
     printf("eip\t0x%08x\t%d\n",cpu.eip,cpu.eip);
   }
