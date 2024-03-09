@@ -179,6 +179,17 @@ static int cmd_x(char *args){
   return 0;
 }
 static int cmd_w(char *args){
+  char *arg = strtok(NULL, " ");
+  if(arg==NULL){printf("please check you expr of watchpoint!\n");assert(0);}
+  bool success;
+  uint32_t value=expr(arg,&success);
+  if(success!=true){
+    printf("something error in cmd_w()!\n");
+    assert(0);
+  }
+  WP*wp_cur=new_wp();
+  wp_cur->Value=value;
+  strcpy(wp_cur->expr,arg);
   return 0;
 }
 static int cmd_d(char *args){
