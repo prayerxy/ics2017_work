@@ -10,7 +10,7 @@ enum {
   TK_NOTYPE = 256,
   /* TODO: Add more token types */
   TK_DEX,TK_HEX,TK_REG,
-  TK_EQ,TK_NEQ,TK_AND,TK_OR,TK_NOT
+  TK_EQ,TK_NEQ,TK_AND,TK_OR,TK_NOT,TK_GETVAL,TK_NEGATIVE
 };
 
 static struct rule {
@@ -91,7 +91,45 @@ bool check_parentheses(int p,int q){
 }
 
 //dominant Operator todo
+static int Oprt_priority(int i){
+  //优先级由高到低 排除括号
+  if(tokens[i].type=='!'||tokens[i].type==TK_GETVAL||tokens[i].type==TK_NEGATIVE){return 1;}
+  else if(tokens[i].type=='*'||tokens[i].type=='/'){return 2;}
+  else if(tokens[i].type=='+'||tokens[i].type=='-'){return 3;}
+  else if(tokens[i].type==TK_EQ||tokens[i].type==TK_NEQ){return 4;}
+  else if(tokens[i].type==TK_AND){return 5;}
+  else if(tokens[i].type==TK_OR){return 6;}
 
+  //数字或寄存器之类
+  return 14;
+}
+//找到dominant op
+static int dominant_OP(int p,int q){
+  int i=0;
+  int dom_op=0;
+  int opp,dom_op_index;
+  for(i=p;i<=q;i++){
+    //非运算符
+    if(tokens[i].type==TK_DEX||tokens[i].type==TK_HEX||tokens[i].type==TK_REG)continue;
+    //括号里面的不可能是dom_op
+    else if(tokens[i].type=='('){
+      while(tokens[i].type!=')'&&i<=q){
+        i++;
+      }
+      assert(i<q);//不可能有括号包围整个表达式
+    }
+    else{
+      opp=Oprt_priority(i);
+      //找到优先级最低的op
+      if(opp>=dom_op){
+        dom_op=opp;
+        dom_op_index=i;
+      }
+    }
+  }
+  assert(dom_op!=0);
+  return dom_op_index;
+}
 static bool make_token(char *e) {
   int position = 0;
   int i;
@@ -134,6 +172,11 @@ static bool make_token(char *e) {
             nr_token++;
             break;
           case TK_REG:
+            memcpy(tokens[nr_token].str,substr_start+1,substr_len-1);
+            tokens[nr_token].str[substr_len-1]='\0';
+            tokens[nr_token].type = rules[i].token_type;
+            nr_token++;
+            break;
           default: 
             tokens[nr_token].type = rules[i].token_type;
             nr_token++;
@@ -147,9 +190,110 @@ static bool make_token(char *e) {
       printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
       return false;
     }
+
+    for(int i=0;i<nr_token;i++){
+      if(tokens[i].type=='*'&&(i=0||Oprt_priority(i-1)<14)){
+        tokens[i].type=TK_GETVAL;//解引用
+      }
+    }
   }
 
   return true;
+}
+
+//eval函数
+static uint32_t eval(int p,int q){
+  if (p > q) {
+    printf("p>q in eval()!\n");
+    assert(0);
+  }
+  else if (p == q) {
+    /* Single token.
+     * For now this token should be a number.
+     * Return the value of the number.
+     */
+    switch (tokens[p].type)
+    {
+      case TK_DEX:
+      case TK_HEX:
+        return strtoul(tokens[p].str,NULL,0);
+        break;
+      case TK_REG:
+        for(int i=0;i<8;i++){
+          if(strcmp(tokens[p].str,regsl[i])==0)
+            return reg_l(i);
+          else if(strcmp(tokens[p].str,regsw[i])==0)
+            return reg_w(i);
+          else if(strcmp(tokens[p].str,regsb[i])==0)
+            return reg_b(i);
+        }
+        if(strcmp(tokens[p].str,"eip")==0)
+          return cpu.eip;
+        else
+        {
+          printf("check register's name in eval!\n");
+          assert(0);
+        }
+      default:
+        printf("error in p=q of eval()!\n");
+        assert(0);
+        break;
+    }
+
+  }
+  else if (check_parentheses(p, q) == true) {
+    /* The expression is surrounded by a matched pair of parentheses.
+     * If that is the case, just throw away the parentheses.
+     */
+    return eval(p + 1, q - 1);
+  }
+  else {
+    //op = the position of dominant operator in the token expression;
+    int op=dominant_OP(p,q);
+    uint32_t val2 = eval(op + 1, q);
+    vaddr_t addr;
+    //单目表达式
+    if(tokens[op].type==TK_NEGATIVE){
+      assert(op==p);
+      return -val2;
+    }
+    else if(tokens[op].type==TK_GETVAL){
+      assert(op==p);
+      return vaddr_read(val2,4);
+    }
+    else if(tokens[op].type=='!'){
+      assert(op==p);
+      if(val2!=0)return 0;
+      else return 1;
+    }
+    //双目表达式
+    uint32_t val1=eval(p,op-1);
+    switch (tokens[op].type) {
+      case '+': return val1+val2;
+      case '-': 
+        if(val1>=val2)
+          return val1-val2;
+        else{
+          printf("something errors when executeing the subtraction in eval!\n");
+          assert(0);
+        }
+      case '*': return val1*val2;
+      case '/': return val1/val2;
+      case TK_EQ:{
+        return val1==val2;
+      }
+      case TK_NEQ:{
+        return val1!=val2;
+      }
+      case TK_AND:{
+        return val1&&val2;
+      }
+      case TK_OR:{
+        return val1||val2;
+      }
+      default: assert(0);
+    }
+  }
 }
 
 uint32_t expr(char *e, bool *success) {
