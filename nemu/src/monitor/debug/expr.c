@@ -279,7 +279,7 @@ static uint32_t eval(int p,int q){
     }
     else if(tokens[op].type==TK_GETVAL){
       uint32_t res=vaddr_read(val2,4);
-      printf(" get the value=%d(0x%08x) of address=0x%x",res,res,val2);
+      printf(" get the value=%d(0x%08x) of address=0x%x\n",res,res,val2);
       return vaddr_read(val2,4);
     }
     else if(tokens[op].type=='!'){
