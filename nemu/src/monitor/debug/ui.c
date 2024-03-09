@@ -160,6 +160,7 @@ static int cmd_x(char *args){
     printf("something errors in expr()!\n");
     return 0;
   }
+  printf("addr\tmemory value\n");
   for(int i=0;i<N;i++){
     //打印地址
     printf("0x%x:\t",addr);
