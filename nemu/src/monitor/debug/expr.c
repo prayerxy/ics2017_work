@@ -1,5 +1,5 @@
 #include "nemu.h"
-
+#include <stdlib.h>
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
  */
@@ -107,7 +107,7 @@ static int Oprt_priority(int i){
 static int dominant_OP(int p,int q){
   int i=0;
   int dom_op=0;
-  int opp,dom_op_index;
+  int opp,dom_op_index=0;
   for(i=p;i<=q;i++){
     //非运算符
     if(tokens[i].type==TK_DEX||tokens[i].type==TK_HEX||tokens[i].type==TK_REG)continue;
@@ -190,12 +190,21 @@ static bool make_token(char *e) {
       printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
       return false;
     }
-
-    for(int i=0;i<nr_token;i++){
-      if(tokens[i].type=='*'&&(i=0||Oprt_priority(i-1)<14)){
-        tokens[i].type=TK_GETVAL;//解引用
+    if(tokens[0].type=='-')
+      tokens[0].type=TK_NEGATIVE;
+    if(tokens[0].type=='*')
+      tokens[0].type=TK_GETVAL;
+    for(int i=1;i<nr_token;i++){
+      if(tokens[i].type=='*'){
+        if(tokens[i-1].type!=')'&&Oprt_priority(i-1)<14)
+          tokens[i].type=TK_GETVAL;//解引用
+      }
+      if(tokens[i].type=='-'){
+        if(tokens[i-1].type!=')'&&Oprt_priority(i-1)<14)
+          tokens[i].type=TK_NEGATIVE;
       }
     }
+
   }
 
   return true;
@@ -251,7 +260,6 @@ static uint32_t eval(int p,int q){
     //op = the position of dominant operator in the token expression;
     int op=dominant_OP(p,q);
     uint32_t val2 = eval(op + 1, q);
-    vaddr_t addr;
     //单目表达式
     if(tokens[op].type==TK_NEGATIVE){
       assert(op==p);
@@ -278,7 +286,12 @@ static uint32_t eval(int p,int q){
           assert(0);
         }
       case '*': return val1*val2;
-      case '/': return val1/val2;
+      case '/':
+      if(val2==0){
+          printf("divide 0 error in eval()!\n");
+          assert(0);
+        } 
+      return val1/val2;
       case TK_EQ:{
         return val1==val2;
       }
@@ -303,7 +316,8 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
-
-  return 0;
+  uint32_t val=eval(0,nr_token-1);
+  //执行完毕，说明正确
+  *success=true;
+  return val;
 }
