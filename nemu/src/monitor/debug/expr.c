@@ -262,15 +262,12 @@ static uint32_t eval(int p,int q){
     uint32_t val2 = eval(op + 1, q);
     //单目表达式
     if(tokens[op].type==TK_NEGATIVE){
-      assert(op==p);
       return -val2;
     }
     else if(tokens[op].type==TK_GETVAL){
-      assert(op==p);
       return vaddr_read(val2,4);
     }
     else if(tokens[op].type=='!'){
-      assert(op==p);
       if(val2!=0)return 0;
       else return 1;
     }
