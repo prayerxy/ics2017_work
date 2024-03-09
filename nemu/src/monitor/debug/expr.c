@@ -106,7 +106,7 @@ static int Oprt_priority(int i){
 //找到dominant op
 static int dominant_OP(int p,int q){
   int i=0;
-  int dom_op=0;
+  int dom_op=-1;
   int opp,dom_op_index=0;
   for(i=p;i<=q;i++){
     //非运算符
@@ -127,7 +127,7 @@ static int dominant_OP(int p,int q){
       }
     }
   }
-  assert(dom_op!=0);
+  assert(dom_op!=-1);
   return dom_op_index;
 }
 static bool make_token(char *e) {
