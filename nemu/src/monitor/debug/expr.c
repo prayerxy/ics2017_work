@@ -274,6 +274,7 @@ static uint32_t eval(int p,int q){
     printf("op:%d\n",op);
     uint32_t val2 = eval(op + 1, q);
     //单目表达式
+    printf("%d \n",val2);
     if(tokens[op].type==TK_NEGATIVE){
       //printf("%d\n",val2);
       return -val2;
