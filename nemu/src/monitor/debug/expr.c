@@ -167,21 +167,21 @@ static bool make_token(char *e) {
             memcpy(tokens[nr_token].str,substr_start,substr_len);
             tokens[nr_token].str[substr_len]='\0';
             tokens[nr_token].type = rules[i].token_type;
-            printf("expr_cur:%s\n",tokens[nr_token].str);
+            //printf("expr_cur:%s\n",tokens[nr_token].str);
             nr_token++;
             break;
           case TK_HEX:
             memcpy(tokens[nr_token].str,substr_start+2,substr_len-2);
             tokens[nr_token].str[substr_len-2]='\0';
             tokens[nr_token].type = rules[i].token_type;
-            printf("expr_cur:%s\n",tokens[nr_token].str);
+            //printf("expr_cur:%s\n",tokens[nr_token].str);
             nr_token++;
             break;
           case TK_REG:
             memcpy(tokens[nr_token].str,substr_start+1,substr_len-1);
             tokens[nr_token].str[substr_len-1]='\0';
             tokens[nr_token].type = rules[i].token_type;
-            printf("expr_cur:%s\n",tokens[nr_token].str);
+            //printf("expr_cur:%s\n",tokens[nr_token].str);
             nr_token++;
             break;
           default: 
@@ -278,9 +278,8 @@ static uint32_t eval(int p,int q){
       return -val2;
     }
     else if(tokens[op].type==TK_GETVAL){
-      printf("getval   %x\n",val2);
       uint32_t res=vaddr_read(val2,4);
-      printf(" get the value=%d(0x%08x) of address=%u(0x%x)",res,res,val2,val2);
+      printf(" get the value=%d(0x%08x) of address=0x%x",res,res,val2);
       return vaddr_read(val2,4);
     }
     else if(tokens[op].type=='!'){
