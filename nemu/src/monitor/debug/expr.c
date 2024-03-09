@@ -167,19 +167,21 @@ static bool make_token(char *e) {
             memcpy(tokens[nr_token].str,substr_start,substr_len);
             tokens[nr_token].str[substr_len]='\0';
             tokens[nr_token].type = rules[i].token_type;
-            printf("expr_cur:%s",tokens[nr_token].str);
+            printf("expr_cur:%s\n",tokens[nr_token].str);
             nr_token++;
             break;
           case TK_HEX:
             memcpy(tokens[nr_token].str,substr_start+2,substr_len-2);
             tokens[nr_token].str[substr_len-2]='\0';
             tokens[nr_token].type = rules[i].token_type;
+            printf("expr_cur:%s\n",tokens[nr_token].str);
             nr_token++;
             break;
           case TK_REG:
             memcpy(tokens[nr_token].str,substr_start+1,substr_len-1);
             tokens[nr_token].str[substr_len-1]='\0';
             tokens[nr_token].type = rules[i].token_type;
+            printf("expr_cur:%s\n",tokens[nr_token].str);
             nr_token++;
             break;
           default: 
