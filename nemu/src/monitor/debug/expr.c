@@ -121,7 +121,7 @@ static int dominant_OP(int p,int q){
     else{
       opp=Oprt_priority(i);
       //找到优先级最低的op
-      if(opp>=dom_op){
+      if(opp>=dom_op&&opp!=1){//单目表达式  最低的在前面 --3
         dom_op=opp;
         dom_op_index=i;
       }
