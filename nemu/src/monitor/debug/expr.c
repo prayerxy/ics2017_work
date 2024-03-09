@@ -293,6 +293,10 @@ static uint32_t eval(int p,int q){
       case '-': 
         if(val1>=val2)
           return val1-val2;
+        else{
+          printf("something errors when executeing the subtraction in eval!\n");
+          assert(0);
+        }
       case '*': return val1*val2;
       case '/':
       if(val2==0){
