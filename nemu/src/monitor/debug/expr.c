@@ -273,6 +273,7 @@ static uint32_t eval(int p,int q){
       return -val2;
     }
     else if(tokens[op].type==TK_GETVAL){
+      printf("getval\n");
       return vaddr_read(val2,4);
     }
     else if(tokens[op].type=='!'){
