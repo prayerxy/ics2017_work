@@ -265,18 +265,18 @@ static uint32_t eval(int p,int q){
     /* The expression is surrounded by a matched pair of parentheses.
      * If that is the case, just throw away the parentheses.
      */
-    printf("p %d  q %d\n",p,q);
+    // printf("p %d  q %d\n",p,q);
     return eval(p + 1, q - 1);
   }
   else {
     //op = the position of dominant operator in the token expression;
     int op=dominant_OP(p,q);
-    printf("op:%d\n",op);
+    // printf("op:%d\n",op);
     uint32_t val2 = eval(op + 1, q);
     //单目表达式
-    printf("%d \n",val2);
+    // printf("%d \n",val2);
     if(tokens[op].type==TK_NEGATIVE){
-      printf("%d\n",-val2);
+      // printf("%d\n",-val2);
       return -val2;
     }
     else if(tokens[op].type==TK_GETVAL){
@@ -289,7 +289,6 @@ static uint32_t eval(int p,int q){
       else return 1;
     }
     //双目表达式
-    printf("p %d q %d\n",p,op-1);
     uint32_t val1=eval(p,op-1);
     switch (tokens[op].type) {
       case '+': return val1+val2;
