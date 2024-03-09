@@ -2,7 +2,7 @@
 #include "monitor/expr.h"
 
 #define NR_WP 32
-
+//使用链表组织监视点的信息
 static WP wp_pool[NR_WP];
 static WP *head, *free_;
 
@@ -19,6 +19,14 @@ void init_wp_pool() {
 }
 
 /* TODO: Implement the functionality of watchpoint */
+//从free_链表中返回一个空闲的监视点结构
+WP*new_wp(){
+  
+}
+//将wp归还至free_链表中
+void free_wp(WP*wp){
+
+}
 
 void print_WPinfo(){
   WP* tmp = head;

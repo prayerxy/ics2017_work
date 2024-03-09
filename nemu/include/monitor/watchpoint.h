@@ -4,7 +4,7 @@
 #include "common.h"
 
 typedef struct watchpoint {
-  int NO;
+  int NO;//表示监视点的序号
   struct watchpoint *next;
 
   /* TODO: Add more members if necessary */
