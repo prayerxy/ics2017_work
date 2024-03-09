@@ -192,7 +192,20 @@ static bool make_token(char *e) {
     }
     
   }
-  
+  if(tokens[0].type=='-')
+    tokens[0].type=TK_NEGATIVE;
+  if(tokens[0].type=='*')
+    tokens[0].type=TK_GETVAL;
+  for(int i=1;i<nr_token;i++){
+    if(tokens[i].type=='*'){
+      if(tokens[i-1].type!=')'&&Oprt_priority(i-1)<14)
+        tokens[i].type=TK_GETVAL;//解引用
+    }
+    if(tokens[i].type=='-'){
+      if(tokens[i-1].type!=')'&&Oprt_priority(i-1)<14)
+        tokens[i].type=TK_NEGATIVE;
+    }
+  }
   return true;
 }
 
@@ -245,6 +258,7 @@ static uint32_t eval(int p,int q){
   else {
     //op = the position of dominant operator in the token expression;
     int op=dominant_OP(p,q);
+    printf("op:%d\n",op);
     uint32_t val2 = eval(op + 1, q);
     //单目表达式
     if(tokens[op].type==TK_NEGATIVE){
@@ -298,20 +312,7 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  if(tokens[0].type=='-')
-    tokens[0].type=TK_NEGATIVE;
-  if(tokens[0].type=='*')
-    tokens[0].type=TK_GETVAL;
-  for(int i=1;i<nr_token;i++){
-    if(tokens[i].type=='*'){
-      if(tokens[i-1].type!=')'&&Oprt_priority(i-1)<14)
-        tokens[i].type=TK_GETVAL;//解引用
-    }
-    if(tokens[i].type=='-'){
-      if(tokens[i-1].type!=')'&&Oprt_priority(i-1)<14)
-        tokens[i].type=TK_NEGATIVE;
-    }
-  }
+
   /* TODO: Insert codes to evaluate the expression. */
   uint32_t val=eval(0,nr_token-1);
   //执行完毕，说明正确
