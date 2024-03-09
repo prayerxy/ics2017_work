@@ -34,7 +34,7 @@ static struct rule {
   {"==", TK_EQ},         // equal
   {"!=", TK_NEQ},        // not-equal
   {"0|[1-9][0-9]*",TK_DEX},
-  {"0[xX][1-9A-Fa-f][0-9A-Fa-f]*",TK_HEX},
+  {"0x[1-9A-Fa-f][0-9A-Fa-f]*",TK_HEX},
   {"\\$(eax|ebx|ecx|edx|esp|ebp|esi|edi|eip|ax|bx|cx|dx|sp|bp|si|di|al|bl|cl|dl|ah|bh|ch|dh)",TK_REG},
   {"\\(", '('},       
   {"\\)", ')'},         
