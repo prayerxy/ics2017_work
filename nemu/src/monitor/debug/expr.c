@@ -227,11 +227,16 @@ static uint32_t eval(int p,int q){
      * For now this token should be a number.
      * Return the value of the number.
      */
+    int number=0;
     switch (tokens[p].type)
     {
       case TK_DEX:
+        sscanf(tokens[p].str,"%d",&number);
+        return number;
+        break;
       case TK_HEX:
-        return strtoul(tokens[p].str,NULL,0);
+        sscanf(tokens[p].str,"%x",&number);
+        return number;
         break;
       case TK_REG:
         for(int i=0;i<8;i++){
