@@ -124,12 +124,13 @@ static int cmd_info(char *args){
 }
 static int cmd_p(char *args){
   //表达式求值
-  if(args==NULL){
+  char *arg=strtok(NULL," ");
+  if(arg==NULL){
     printf("please enter the expr you want to compute!\n");
     return 0;
   }
   bool success;
-  uint32_t res=expr(args,&success);
+  uint32_t res=expr(arg,&success);
   if(!success){
     printf("please check your expr!\n");
     return 0;
