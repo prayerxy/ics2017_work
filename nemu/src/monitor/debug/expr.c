@@ -106,7 +106,7 @@ static int Oprt_priority(int i){
 //找到dominant op
 static int dominant_OP(int p,int q){
   int i=0;
-  int dom_op=-1;
+  int dom_op=0;
   int opp,dom_op_index=0;
   for(i=p;i<=q;i++){
     //非运算符
@@ -121,13 +121,17 @@ static int dominant_OP(int p,int q){
     else{
       opp=Oprt_priority(i);
       //找到优先级最低的op
-      if(opp>=dom_op&&opp!=1){//单目表达式  最低的在前面 --3
-        dom_op=opp;
-        dom_op_index=i;
+      if(opp>=dom_op){//单目表达式  最低的在前面 --3
+        if(opp==dom_op&&opp==1){}
+        else{
+          dom_op=opp;
+          dom_op_index=i;
+        }
+        
       }
     }
   }
-  assert(dom_op!=-1);
+  assert(dom_op!=0);
   return dom_op_index;
 }
 static bool make_token(char *e) {
