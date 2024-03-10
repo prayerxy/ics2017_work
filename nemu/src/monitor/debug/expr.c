@@ -10,7 +10,7 @@ enum {
   TK_NOTYPE = 256,
   /* TODO: Add more token types */
   TK_DEX,TK_HEX,TK_REG,
-  TK_EQ,TK_NEQ,TK_AND,TK_OR,TK_NOT,TK_GETVAL,TK_NEGATIVE
+  TK_EQ,TK_NEQ,TK_AND,TK_OR,TK_NOT,TK_DEREF,TK_NEGATIVE
 };
 
 static struct rule {
@@ -93,7 +93,7 @@ bool check_parentheses(int p,int q){
 //dominant Operator todo
 static int Oprt_priority(int i){
   //优先级由高到低 排除括号
-  if(tokens[i].type=='!'||tokens[i].type==TK_GETVAL||tokens[i].type==TK_NEGATIVE){return 1;}
+  if(tokens[i].type=='!'||tokens[i].type==TK_DEREF||tokens[i].type==TK_NEGATIVE){return 1;}
   else if(tokens[i].type=='*'||tokens[i].type=='/'){return 2;}
   else if(tokens[i].type=='+'||tokens[i].type=='-'){return 3;}
   else if(tokens[i].type==TK_EQ||tokens[i].type==TK_NEQ){return 4;}
@@ -202,11 +202,12 @@ static bool make_token(char *e) {
   if(tokens[0].type=='-')
     tokens[0].type=TK_NEGATIVE;
   if(tokens[0].type=='*')
-    tokens[0].type=TK_GETVAL;
+    tokens[0].type=TK_DEREF;
   for(int i=1;i<nr_token;i++){
     if(tokens[i].type=='*'){
+      //注意左括号情况
       if(tokens[i-1].type!=')'&&(Oprt_priority(i-1)<14||tokens[i-1].type=='('))
-        tokens[i].type=TK_GETVAL;//解引用
+        tokens[i].type=TK_DEREF;//解引用
     }
     if(tokens[i].type=='-'){
       if(tokens[i-1].type!=')'&&(Oprt_priority(i-1)<14||tokens[i-1].type=='('))
@@ -279,7 +280,7 @@ static uint32_t eval(int p,int q){
       // printf("%d\n",-val2);
       return -val2;
     }
-    else if(tokens[op].type==TK_GETVAL){
+    else if(tokens[op].type==TK_DEREF){
       uint32_t res=vaddr_read(val2,4);
       printf(" get the value=%d(0x%08x) of address=0x%x\n",res,res,val2);
       return vaddr_read(val2,4);

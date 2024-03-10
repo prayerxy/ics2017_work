@@ -109,7 +109,7 @@ static int cmd_si(char *args){
 static int cmd_info(char *args){
   char *arg = strtok(NULL, " ");
   if(arg==NULL){
-    printf("Error in cmd_info!\n");
+    printf("please check your param in cmd_info()!\n");
     return 0;
   }
   else if(strcmp(arg,"r")==0){
@@ -119,7 +119,7 @@ static int cmd_info(char *args){
     printf("eip\t0x%08x\t%d\n",cpu.eip,cpu.eip);
   }
   else if(strcmp(arg,"w")==0){
-    //打印监视点的信息 todo
+    //打印监视点的信息
     print_WPinfo();
   }
 
@@ -162,7 +162,7 @@ static int cmd_x(char *args){
     printf("something errors in expr()!\n");
     return 0;
   }
-  printf("addr\t\tmemory value\n");
+  printf("addr\t\tmemory\n");
   for(int i=0;i<N;i++){
     //打印地址
     printf("0x%x:\t",addr);

@@ -2,7 +2,7 @@
 #include "monitor/expr.h"
 
 #define NR_WP 32
-//使用链表组织监视点的信息
+//使用链表组织监视点
 static WP wp_pool[NR_WP];
 static WP *head, *free_;//head组织使用中的链表结构，free_组织空闲的监视点结构
 static int used_node=0;
@@ -19,7 +19,7 @@ void init_wp_pool() {
 }
 
 /* TODO: Implement the functionality of watchpoint */
-//从free_链表中返回一个空闲的监视点结构 这里没有完成赋值
+//从free_链表中返回一个空闲的监视点结构 这里只对No.赋值
 WP*new_wp(){
   if(free_==NULL)assert(0);
   WP*cur=free_;
@@ -58,15 +58,16 @@ void free_wp(int n){
       cur=cur->next;
     }
     if(res){
+      assert(res==cur);
       if(cur_prev){
         cur_prev->next=cur->next;
-      }else {assert(head==res);head=cur->next;printf("head\n");}//删掉的是头节点
+      }else {assert(head==res);head=res->next;printf("Delete one head of watchpoints list\n");}//删掉的是头节点
 
       res->next=free_;
       free_=res;//free_指向空闲链表的最末端
     }
     else{
-      printf("there is no such watchpoint!\n");
+      printf("You can't delete a non-existent watchpoint!\n");
     }
   }
 }
@@ -74,7 +75,7 @@ void free_wp(int n){
 void print_WPinfo(){
   WP* tmp = head;
 	if(!tmp){
-		printf("no watchpoint is in use..!\n");
+		printf("no watchpoint is in use!\n");
 		return;
 	}
 	while(tmp){
