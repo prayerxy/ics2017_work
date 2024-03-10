@@ -9,6 +9,7 @@
 
 void cpu_exec(uint64_t);
 void print_WPinfo();
+WP* new_wp();
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 char* rl_gets() {
   static char *line_read = NULL;
@@ -188,8 +189,8 @@ static int cmd_w(char *args){
     assert(0);
   }
   WP*wp_cur=new_wp();
-  wp_cur->Value=value;
-  strcpy(wp_cur->expr,arg);
+  wp_cur->Value=value;//值
+  strcpy(wp_cur->expr,arg);//表达式
   return 0;
 }
 static int cmd_d(char *args){

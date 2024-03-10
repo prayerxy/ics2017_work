@@ -77,7 +77,30 @@ void print_WPinfo(){
 		return;
 	}
 	while(tmp){
-		printf("%d   ,%s  ,%d  \n", tmp->NO, tmp->expr, tmp->Value);
+    printf("No.\tExpr\tValue\n");
+		printf("%d\t%s\t%d\n", tmp->NO, tmp->expr, tmp->Value);
 		tmp = tmp -> next;
 	}
+}
+
+//判断监视点是否触发
+bool check_wpvalue(){
+  WP*cur=head;
+  bool success;
+  if(cur==NULL)return false;
+  while(cur!=NULL){
+    uint32_t res;
+    res=expr(cur->expr,&success);
+    if(!success){
+      printf("computing value of expr errors!\n");
+      continue;
+    }
+    if(res!=cur->Value){
+      printf("watchpoint NO.:%d,expr:%s,old_value:%d,now_value:%d\n",cur->NO,cur->expr,cur->Value,res);
+      cur->Value=res;
+      return true;
+    }
+    cur=cur->next;
+  }
+  return false;
 }
