@@ -29,13 +29,13 @@ static struct rule {
   {"\\-", '-'},          // minus
   {"!",TK_NOT},
   {"==", TK_EQ},         // equal
-  {"\\|\\|", TK_OR},        // calc-or
-  {"&&", TK_AND},         // calc-and
+  {"\\|\\|", TK_OR},     //logic-or
+  {"&&", TK_AND},        
   {"==", TK_EQ},         // equal
   {"!=", TK_NEQ},        // not-equal
   {"0[xX][1-9A-Fa-f][0-9A-Fa-f]*",TK_HEX},
    {"0|[1-9][0-9]*",TK_DEX},
-  {"\\$(eax|ebx|ecx|edx|esp|ebp|esi|edi|eip|ax|bx|cx|dx|sp|bp|si|di|al|bl|cl|dl|ah|bh|ch|dh)",TK_REG},
+  {"\\$(eax|ebx|ecx|edx|esp|ebp|esi|edi|eip|ax|bx|cx|dx|sp|bp|si|di|al|bl|cl|dl|ah|bh|ch|dh)",TK_REG},//all possible regs
   {"\\(", '('},       
   {"\\)", ')'},         
 
