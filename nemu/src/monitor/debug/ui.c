@@ -192,7 +192,7 @@ static int cmd_w(char *args){
   WP*wp_cur=new_wp();
   wp_cur->Value=value;//值
   strcpy(wp_cur->expr,arg);//表达式
-  printf("set one watchpoints,NO.:%d,expr:%s,value:%d",wp_cur->NO,wp_cur->expr,wp_cur->Value);
+  printf("set one watchpoints,NO.:%d,expr:%s,value:%d\n",wp_cur->NO,wp_cur->expr,wp_cur->Value);
   return 0;
 }
 static int cmd_d(char *args){
