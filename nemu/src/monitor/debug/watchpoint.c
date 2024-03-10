@@ -88,6 +88,7 @@ void print_WPinfo(){
 bool check_wpvalue(){
   WP*cur=head;
   bool success;
+  bool ret=false;
   if(cur==NULL)return false;
   while(cur!=NULL){
     uint32_t res;
@@ -99,9 +100,9 @@ bool check_wpvalue(){
     if(res!=cur->Value){
       printf("watchpoint NO.:%d,expr:%s,old_value:%d,now_value:%d\n",cur->NO,cur->expr,cur->Value,res);
       cur->Value=res;
-      return true;
+      ret=true;
     }
     cur=cur->next;
   }
-  return false;
+  return ret;
 }
