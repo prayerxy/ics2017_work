@@ -58,11 +58,12 @@ void free_wp(int n){
       cur=cur->next;
     }
     if(res){
-      res->next=free_;
-      free_=res;//free_指向空闲链表的最末端
       if(cur_prev){
         cur_prev->next=cur->next;
-      }else {head=cur->next;printf("head\n");}//删掉的是头节点
+      }else {assert(head==res);head=cur->next;printf("head\n");}//删掉的是头节点
+
+      res->next=free_;
+      free_=res;//free_指向空闲链表的最末端
     }
     else{
       printf("there is no such watchpoint!\n");
