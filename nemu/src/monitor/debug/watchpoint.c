@@ -77,8 +77,8 @@ void print_WPinfo(){
 		return;
 	}
 	while(tmp){
-    printf("No.\tExpr\tValue\n");
-		printf("%d\t%s\t%d\n", tmp->NO, tmp->expr, tmp->Value);
+    printf("No.\tExpr\t\tValue\n");
+		printf("%d\t%s\t\t%d\n", tmp->NO, tmp->expr, tmp->Value);
 		tmp = tmp -> next;
 	}
 }

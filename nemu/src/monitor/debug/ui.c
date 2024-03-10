@@ -10,6 +10,7 @@
 void cpu_exec(uint64_t);
 void print_WPinfo();
 WP* new_wp();
+void free_wp(int n);
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 char* rl_gets() {
   static char *line_read = NULL;
@@ -191,9 +192,14 @@ static int cmd_w(char *args){
   WP*wp_cur=new_wp();
   wp_cur->Value=value;//值
   strcpy(wp_cur->expr,arg);//表达式
+  printf("set one watchpoints,NO.:%d,expr:%s,value:%d",wp_cur->NO,wp_cur->expr,wp_cur->Value);
   return 0;
 }
 static int cmd_d(char *args){
+  char *arg = strtok(NULL, " ");
+  if(arg==NULL){printf("please check your args in cmd_d()!\n");return 0;}
+  int index=atoi(arg);
+  free_wp(index);
   return 0;
 }
 
