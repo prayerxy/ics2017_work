@@ -238,11 +238,9 @@ static uint32_t eval(int p,int q){
       case TK_DEX:
         sscanf(tokens[p].str,"%d",&number);
         return number;
-        break;
       case TK_HEX:
         sscanf(tokens[p].str,"%x",&number);
         return number;
-        break;
       case TK_REG:
         for(int i=0;i<8;i++){
           if(strcmp(tokens[p].str,regsl[i])==0)
@@ -262,7 +260,6 @@ static uint32_t eval(int p,int q){
       default:
         printf("error in p=q of eval()!\n");
         assert(0);
-        break;
     }
 
   }
@@ -311,18 +308,14 @@ static uint32_t eval(int p,int q){
           assert(0);
         } 
       return val1/val2;
-      case TK_EQ:{
+      case TK_EQ:
         return val1==val2;
-      }
-      case TK_NEQ:{
+      case TK_NEQ:
         return val1!=val2;
-      }
-      case TK_AND:{
+      case TK_AND:
         return val1&&val2;
-      }
-      case TK_OR:{
+      case TK_OR:
         return val1||val2;
-      }
       default: assert(0);
     }
   }
