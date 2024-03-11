@@ -120,7 +120,6 @@ static int dominant_OP(int p,int q){
       while(tokens[i].type!=')'&&i<=q){
         i++;
       }
-      assert(i<q||tokens[p].type!='(');//不可能有括号包围整个表达式的情况
     }
     else{
       opp=Oprt_priority(i);
