@@ -84,9 +84,10 @@ bool check_parentheses(int p,int q){
     if(tokens[i].type=='(')count++;
     else if(tokens[i].type==')'){
       if(count>0)count--;
-      else return false;//此时count<=0且多一个)
+      else {assert(0);return false;}//此时count<=0且多一个)
     }
   }
+  if(count!=0)assert(0);
   return count==0;
 }
 
