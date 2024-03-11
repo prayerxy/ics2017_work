@@ -273,7 +273,7 @@ static uint32_t eval(int p,int q){
   else {
     //op = the position of dominant operator in the token expression;
     int op=dominant_OP(p,q);
-    // printf("op:%d\n",op);
+   printf("op:%d\n",op);
     uint32_t val2 = eval(op + 1, q);
     //单目表达式
     // printf("%d \n",val2);
