@@ -37,7 +37,7 @@ static struct rule {
    {"0|[1-9][0-9]*",TK_DEX},
   {"\\$(eax|ebx|ecx|edx|esp|ebp|esi|edi|eip|ax|bx|cx|dx|sp|bp|si|di|al|bl|cl|dl|ah|bh|ch|dh)",TK_REG},//all possible regs
   {"\\(", '('},       
-  {"\\)", ')'},         
+  {"\\)", ')'}        
 
 };
 
