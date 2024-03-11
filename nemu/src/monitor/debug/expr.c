@@ -69,26 +69,29 @@ typedef struct token {
 
 Token tokens[32];//按顺序存放已经被识别出的token信息
 int nr_token;//指示已经被识别出的token数目
-
+bool check_valid_parentheses(int p,int q){
+  int count=0;
+  for(int i=p;i<=q;i++){
+    if(tokens[i].type=='(')count++;
+    else if(tokens[i].type==')'){
+      if(count>0)count--;
+      else {return false;}//此时count<=0且多一个)
+    }
+  }
+  return count==0;
+}
 //识别一个表达式是否被一对匹配的括号包围着
 bool check_parentheses(int p,int q){
   if(p>=q){
     printf("p>=q is impossible!\n");
     return false;
   }
-  if(tokens[p].type!='('||tokens[q].type!=')'){
-    return false;
+  if(!check_valid_parentheses(p,q)){printf("please check your parentheses of expr!\n");assert(0);}
+  if(tokens[p].type=='('&&tokens[q].type==')'){
+    if(check_valid_parentheses(p+1,q-1))
+      return 1;//排除(3+5)+(2+4)情况
   }
-  int count=0;
-  for(int i=p;i<=q;i++){
-    if(tokens[i].type=='(')count++;
-    else if(tokens[i].type==')'){
-      if(count>0)count--;
-      else {assert(0);return false;}//此时count<=0且多一个)
-    }
-  }
-  if(count!=0)assert(0);
-  return count==0;
+  return 0;
 }
 
 //dominant Operator todo
