@@ -97,7 +97,7 @@ bool check_parentheses(int p,int q){
 //dominant Operator todo
 static int Oprt_priority(int i){
   //优先级由高到低 排除括号
-  if(tokens[i].type=='!'||tokens[i].type==TK_DEREF||tokens[i].type==TK_NEGATIVE){return 1;}
+  if(tokens[i].type=='!'||tokens[i].type==TK_DEREF||tokens[i].type==TK_NEGATIVE||tokens[i].type=='('||tokens[i].type==')'){return 1;}
   else if(tokens[i].type=='*'||tokens[i].type=='/'){return 2;}
   else if(tokens[i].type=='+'||tokens[i].type=='-'){return 3;}
   else if(tokens[i].type==TK_EQ||tokens[i].type==TK_NEQ){return 4;}
@@ -124,6 +124,7 @@ static int dominant_OP(int p,int q){
     else{
       opp=Oprt_priority(i);
       //找到优先级最低的op
+      assert(tokens[opp].type!='('&&tokens[opp].type!=')');
       if(opp>=dom_op){//单目表达式  最低的在前面 --3
         if(opp==dom_op&&opp==1){}
         else{
