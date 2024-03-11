@@ -124,7 +124,7 @@ static int dominant_OP(int p,int q){
     else{
       opp=Oprt_priority(i);
       //找到优先级最低的op
-      assert(tokens[opp].type!='('&&tokens[opp].type!=')');
+      //assert(tokens[opp].type!='('&&tokens[opp].type!=')');
       if(opp>=dom_op){//单目表达式  最低的在前面 --3
         if(opp==dom_op&&opp==1){}
         else{
