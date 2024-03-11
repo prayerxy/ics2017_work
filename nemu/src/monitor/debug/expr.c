@@ -136,7 +136,6 @@ static int dominant_OP(int p,int q){
     }
   }
   assert(dom_op!=0);
-  assert(tokens[dom_op_index].type!='('&&tokens[dom_op_index].type!=')');
   return dom_op_index;
 }
 static bool make_token(char *e) {
