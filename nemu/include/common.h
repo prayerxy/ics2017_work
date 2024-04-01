@@ -15,7 +15,7 @@
 #include <string.h>
 
 typedef uint8_t bool;
-
+//在nemu中，RTL寄存器统一使用rtlreg_t来定义
 typedef uint32_t rtlreg_t;
 
 typedef uint32_t paddr_t;

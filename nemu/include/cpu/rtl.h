@@ -7,7 +7,7 @@ extern rtlreg_t t0, t1, t2, t3;
 extern const rtlreg_t tzero;
 
 /* RTL basic instructions */
-
+//立即数读入
 static inline void rtl_li(rtlreg_t* dest, uint32_t imm) {
   *dest = imm;
 }
@@ -31,7 +31,7 @@ static inline void rtl_li(rtlreg_t* dest, uint32_t imm) {
     *dest = concat(c_, name) (*src1, imm); \
   }
 
-
+//调用它生成两个函数 ：寄存器-寄存器类型    立即数-寄存器类型
 make_rtl_arith_logic(add)
 make_rtl_arith_logic(sub)
 make_rtl_arith_logic(and)
@@ -58,27 +58,28 @@ static inline void rtl_div(rtlreg_t* q, rtlreg_t* r, const rtlreg_t* src1_hi, co
 static inline void rtl_idiv(rtlreg_t* q, rtlreg_t* r, const rtlreg_t* src1_hi, const rtlreg_t* src1_lo, const rtlreg_t* src2) {
   asm volatile("idiv %4" : "=a"(*q), "=d"(*r) : "d"(*src1_hi), "a"(*src1_lo), "r"(*src2));
 }
-
+//内存的访问   load memory
 static inline void rtl_lm(rtlreg_t *dest, const rtlreg_t* addr, int len) {
   *dest = vaddr_read(*addr, len);
 }
-
+//store memory
 static inline void rtl_sm(rtlreg_t* addr, int len, const rtlreg_t* src1) {
   vaddr_write(*addr, len, *src1);
 }
-
+//通用寄存器的访问  取出数值
+//b是1位
 static inline void rtl_lr_b(rtlreg_t* dest, int r) {
   *dest = reg_b(r);
 }
-
+//w是2位
 static inline void rtl_lr_w(rtlreg_t* dest, int r) {
   *dest = reg_w(r);
 }
-
+//l是4位
 static inline void rtl_lr_l(rtlreg_t* dest, int r) {
   *dest = reg_l(r);
 }
-
+//store
 static inline void rtl_sr_b(int r, const rtlreg_t* src1) {
   reg_b(r) = *src1;
 }
@@ -92,7 +93,8 @@ static inline void rtl_sr_l(int r, const rtlreg_t* src1) {
 }
 
 /* RTL psuedo instructions */
-
+//rtl伪指令，通过RTL基本指令或者已经实现的RTL伪指令来实现的
+//带宽度的通用寄存器访问
 static inline void rtl_lr(rtlreg_t* dest, int r, int width) {
   switch (width) {
     case 4: rtl_lr_l(dest, r); return;
@@ -101,7 +103,7 @@ static inline void rtl_lr(rtlreg_t* dest, int r, int width) {
     default: assert(0);
   }
 }
-
+//带宽度的通用寄存器访问
 static inline void rtl_sr(int r, int width, const rtlreg_t* src1) {
   switch (width) {
     case 4: rtl_sr_l(r, src1); return;
@@ -110,7 +112,7 @@ static inline void rtl_sr(int r, int width, const rtlreg_t* src1) {
     default: assert(0);
   }
 }
-
+//EFLAGS标志位的读写
 #define make_rtl_setget_eflags(f) \
   static inline void concat(rtl_set_, f) (const rtlreg_t* src) { \
     TODO(); \
@@ -123,7 +125,7 @@ make_rtl_setget_eflags(CF)
 make_rtl_setget_eflags(OF)
 make_rtl_setget_eflags(ZF)
 make_rtl_setget_eflags(SF)
-
+//数据移动
 static inline void rtl_mv(rtlreg_t* dest, const rtlreg_t *src1) {
   // dest <- src1
   TODO();
@@ -133,7 +135,7 @@ static inline void rtl_not(rtlreg_t* dest) {
   // dest <- ~dest
   TODO();
 }
-
+//符号扩展
 static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- signext(src1[(width * 8 - 1) .. 0])
   TODO();

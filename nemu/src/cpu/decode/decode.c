@@ -2,9 +2,11 @@
 #include "cpu/rtl.h"
 
 /* shared by all helper functions */
+//decoding，用于记录一些全局译码信息供后续使用，src src2 dest
+//decode.h中三个宏定义 id_src id_src2 id_dest
 DecodeInfo decoding;
-rtlreg_t t0, t1, t2, t3;
-const rtlreg_t tzero = 0;
+rtlreg_t t0, t1, t2, t3;//临时寄存器
+const rtlreg_t tzero = 0;//只能读出0,不能写入 rtl寄存器
 
 #define make_DopHelper(name) void concat(decode_op_, name) (vaddr_t *eip, Operand *op, bool load_val)
 
@@ -109,6 +111,7 @@ static inline make_DopHelper(O) {
 /* Eb <- Gb
  * Ev <- Gv
  */
+//make_DHelper继续调用
 make_DHelper(G2E) {
   decode_op_rm(eip, id_dest, true, id_src, true);
 }

@@ -14,11 +14,11 @@ typedef struct {
   int width;
   union {
     uint32_t reg;
-    rtlreg_t addr;
+    rtlreg_t addr;//rtl寄存器
     uint32_t imm;
     int32_t simm;
   };
-  rtlreg_t val;
+  rtlreg_t val;//rtl寄存器
   char str[OP_STR_SIZE];
 } Operand;
 
@@ -66,11 +66,12 @@ void operand_write(Operand *, rtlreg_t *);
 
 /* shared by all helper functions */
 extern DecodeInfo decoding;
-
+//访问decoding的属性
 #define id_src (&decoding.src)
 #define id_src2 (&decoding.src2)
 #define id_dest (&decoding.dest)
 
+//注意这个转化为void decode_+name ()的函数
 #define make_DHelper(name) void concat(decode_, name) (vaddr_t *eip)
 typedef void (*DHelper) (vaddr_t *);
 

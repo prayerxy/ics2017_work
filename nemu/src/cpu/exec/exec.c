@@ -4,7 +4,7 @@
 typedef struct {
   DHelper decode;
   EHelper execute;
-  int width;
+  int width;//操作数的宽度信息
 } opcode_entry;
 
 #define IDEXW(id, ex, w)   {concat(decode_, id), concat(exec_, ex), w}
@@ -70,7 +70,7 @@ make_group(gp7,
     EMPTY, EMPTY, EMPTY, EMPTY)
 
 /* TODO: Add more instructions!!! */
-
+//译码查找表  通过操作码opcode来索引，每一个opcode对应相应指令的译码函数
 opcode_entry opcode_table [512] = {
   /* 0x00 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x04 */	EMPTY, EMPTY, EMPTY, EMPTY,
@@ -207,18 +207,21 @@ opcode_entry opcode_table [512] = {
 
 static make_EHelper(2byte_esc) {
   uint32_t opcode = instr_fetch(eip, 1) | 0x100;
-  decoding.opcode = opcode;
+  decoding.opcode = opcode;//记录在全局decoding中
   set_width(opcode_table[opcode].width);
   idex(eip, &opcode_table[opcode]);
 }
 
 make_EHelper(real) {
+  //取指，得到指令第一个字节
   uint32_t opcode = instr_fetch(eip, 1);
   decoding.opcode = opcode;
+  //根据opcode查表 记录操作数宽度信息
   set_width(opcode_table[opcode].width);
+  //调用idex()对指令进一步译码和执行
   idex(eip, &opcode_table[opcode]);
 }
-
+//如果当前指令是跳转指令，则将指令指针设置为跳转目标地址，否则将其设置为顺序执行下一条指令的地址。
 static inline void update_eip(void) {
   cpu.eip = (decoding.is_jmp ? (decoding.is_jmp = 0, decoding.jmp_eip) : decoding.seq_eip);
 }
@@ -228,8 +231,9 @@ void exec_wrapper(bool print_flag) {
   decoding.p = decoding.asm_buf;
   decoding.p += sprintf(decoding.p, "%8x:   ", cpu.eip);
 #endif
-
+  //将当前的%eip保存到全局译码信息decoding的成员seq_eip中
   decoding.seq_eip = cpu.eip;
+  //地址作为参数传进去，返回时decoding.seq_eip指向下一条指令的地址
   exec_real(&decoding.seq_eip);
 
 #ifdef DEBUG
@@ -245,7 +249,7 @@ void exec_wrapper(bool print_flag) {
 #ifdef DIFF_TEST
   uint32_t eip = cpu.eip;
 #endif
-
+  //更新eip
   update_eip();
 
 #ifdef DIFF_TEST

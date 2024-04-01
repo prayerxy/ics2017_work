@@ -17,6 +17,7 @@ static inline uint32_t instr_fetch(vaddr_t *eip, int len) {
     decoding.p += sprintf(decoding.p, "%02x ", p_instr[i]);
   }
 #endif
+  //更新eip地址
   (*eip) += len;
   return instr;
 }
@@ -38,15 +39,15 @@ static inline const char* get_cc_name(int subcode) {
 #else
 #define print_asm(...)
 #endif
-
+//操作数宽度width对应的后缀字符
 #define suffix_char(width) ((width) == 4 ? 'l' : ((width) == 1 ? 'b' : ((width) == 2 ? 'w' : '?')))
-
+//打印单目操作数指令instr的反汇编结果
 #define print_asm_template1(instr) \
   print_asm(str(instr) "%c %s", suffix_char(id_dest->width), id_dest->str)
-
+//打印双目操作数指令instr的反汇编结果
 #define print_asm_template2(instr) \
   print_asm(str(instr) "%c %s,%s", suffix_char(id_dest->width), id_src->str, id_dest->str)
-
+//打印三目操作数指令instr的反汇编结果
 #define print_asm_template3(instr) \
   print_asm(str(instr) "%c %s,%s,%s", suffix_char(id_dest->width), id_src->str, id_src2->str, id_dest->str)
 
