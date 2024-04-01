@@ -7,6 +7,7 @@ typedef struct {
   int width;//操作数的宽度信息
 } opcode_entry;
 
+//ID译码 EX执行  W表示需要取字
 #define IDEXW(id, ex, w)   {concat(decode_, id), concat(exec_, ex), w}
 #define IDEX(id, ex)       IDEXW(id, ex, 0)
 #define EXW(ex, w)         {NULL, concat(exec_, ex), w}

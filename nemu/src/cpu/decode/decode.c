@@ -111,7 +111,12 @@ static inline make_DopHelper(O) {
 /* Eb <- Gb
  * Ev <- Gv
  */
+//b是字节，v是字或双字
+//"Gv" 表示源操作数是一个字或双字大小的寄存器
+//"Ev" 表示目标操作数是一个字或双字，可以是内存中的一个字或双字或者一个字或双字大小的寄存器
+
 //make_DHelper继续调用
+//其中 "G" 表示通用寄存器，"E" 表示内存中的一个字节。
 make_DHelper(G2E) {
   decode_op_rm(eip, id_dest, true, id_src, true);
 }
