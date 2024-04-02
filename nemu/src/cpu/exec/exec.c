@@ -218,13 +218,13 @@ static make_EHelper(2byte_esc) {
 
 make_EHelper(real) {
   //取指，得到指令第一个字节
-  printf("%08x",*eip);
+  printf("%08x\n",*eip);
   uint32_t opcode = instr_fetch(eip, 1);
   decoding.opcode = opcode;
   //根据opcode查表 记录操作数宽度信息
   set_width(opcode_table[opcode].width);
   //调用idex()对指令进一步译码和执行
-  printf("%08x",*eip);
+  printf("%08x\n",*eip);
   idex(eip, &opcode_table[opcode]);
 }
 //如果当前指令是跳转指令，则将指令指针设置为跳转目标地址，否则将其设置为顺序执行下一条指令的地址。
