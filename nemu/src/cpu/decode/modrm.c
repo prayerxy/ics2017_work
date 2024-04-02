@@ -82,6 +82,7 @@ void read_ModR_M(vaddr_t *eip, Operand *rm, bool load_rm_val, Operand *reg, bool
   m.val = instr_fetch(eip, 1);
   decoding.ext_opcode = m.opcode;
   if (reg != NULL) {
+    //写入，读取值
     reg->type = OP_TYPE_REG;
     reg->reg = m.reg;
     if (load_reg_val) {
@@ -94,6 +95,7 @@ void read_ModR_M(vaddr_t *eip, Operand *rm, bool load_rm_val, Operand *reg, bool
   }
 
   if (m.mod == 3) {
+    //寄存器-寄存器寻址
     rm->type = OP_TYPE_REG;
     rm->reg = m.R_M;
     if (load_rm_val) {
@@ -105,6 +107,7 @@ void read_ModR_M(vaddr_t *eip, Operand *rm, bool load_rm_val, Operand *reg, bool
 #endif
   }
   else {
+    //内存-寄存器
     load_addr(eip, &m, rm);
     if (load_rm_val) {
       rtl_lm(&rm->val, &rm->addr, rm->width);
