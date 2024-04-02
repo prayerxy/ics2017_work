@@ -16,6 +16,7 @@ const rtlreg_t tzero = 0;//只能读出0,不能写入 rtl寄存器
 static inline make_DopHelper(I) {
   /* eip here is pointing to the immediate */
   op->type = OP_TYPE_IMM;
+  //读取立即数
   op->imm = instr_fetch(eip, op->width);
   rtl_li(&op->val, op->imm);
 

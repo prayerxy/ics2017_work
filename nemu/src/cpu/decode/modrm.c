@@ -10,6 +10,7 @@ void load_addr(vaddr_t *eip, ModR_M *m, Operand *rm) {
   rtl_li(&rm->addr, 0);
 
   if (m->R_M == R_ESP) {
+    //R_M 字段（也就是 base 寄存器）为 R_ESP 时，表示该指令需要使用 SIB 字段进一步确定内存地址。
     SIB s;
     s.val = instr_fetch(eip, 1);
     base_reg = s.base;
@@ -79,6 +80,7 @@ void load_addr(vaddr_t *eip, ModR_M *m, Operand *rm) {
 
 void read_ModR_M(vaddr_t *eip, Operand *rm, bool load_rm_val, Operand *reg, bool load_reg_val) {
   ModR_M m;
+  //读取 modr/m字段
   m.val = instr_fetch(eip, 1);
   decoding.ext_opcode = m.opcode;
   if (reg != NULL) {
