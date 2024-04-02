@@ -26,7 +26,9 @@ make_EHelper(jmp_rm) {
 make_EHelper(call) {
   // the target address is calculated at the decode stage
   //原本下一条指令的地址入栈
+
   decoding.is_jmp=1;
+  //load imm
   rtl_li(&t0,decoding.seq_eip);
   rtl_push(&t0);
 
