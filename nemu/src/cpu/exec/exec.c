@@ -7,7 +7,9 @@ typedef struct {
   int width;//操作数的宽度信息
 } opcode_entry;
 
-//ID译码 EX执行  W表示需要取字
+//ID译码 EX执行  
+//W表示宽度是确定的，如果是IDEX标识宽度不确定，可能是16位或者32位
+//通过decoding.is_operand_size_16确定
 #define IDEXW(id, ex, w)   {concat(decode_, id), concat(exec_, ex), w}
 #define IDEX(id, ex)       IDEXW(id, ex, 0)
 #define EXW(ex, w)         {NULL, concat(exec_, ex), w}
@@ -15,7 +17,7 @@ typedef struct {
 #define EMPTY              EX(inv)
 
 static inline void set_width(int width) {
-  if (width == 0) {
+  if (width == 0) {//32位/16位，由前缀0x66确定
     width = decoding.is_operand_size_16 ? 2 : 4;
   }
   decoding.src.width = decoding.dest.width = decoding.src2.width = width;
@@ -85,7 +87,7 @@ opcode_entry opcode_table [512] = {
   /* 0x24 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x28 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x2c */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0x30 */	EMPTY, EMPTY, EMPTY, EMPTY,
+  /* 0x30 */	IDEXW(G2E,xor,1), IDEX(G2E,xor),IDEXW(G2E,xor,1), IDEX(G2E,xor),
   /* 0x34 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x38 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x3c */	EMPTY, EMPTY, EMPTY, EMPTY,
