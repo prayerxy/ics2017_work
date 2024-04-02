@@ -112,7 +112,7 @@ opcode_entry opcode_table [512] = {
   /* 0x84 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x88 */	IDEXW(mov_G2E, mov, 1), IDEX(mov_G2E, mov), IDEXW(mov_E2G, mov, 1), IDEX(mov_E2G, mov),
   /* 0x8c */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0x90 */	EMPTY, EMPTY, EMPTY, EMPTY,
+  /* 0x90 */	EX(nop), EMPTY, EMPTY, EMPTY,
   /* 0x94 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x98 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x9c */	EMPTY, EMPTY, EMPTY, EMPTY,
@@ -218,13 +218,13 @@ static make_EHelper(2byte_esc) {
 
 make_EHelper(real) {
   //取指，得到指令第一个字节
-  printf("%08x\n",cpu.eip);
+ 
   uint32_t opcode = instr_fetch(eip, 1);
   decoding.opcode = opcode;
   //根据opcode查表 记录操作数宽度信息
   set_width(opcode_table[opcode].width);
   //调用idex()对指令进一步译码和执行
-  printf("%08x\n",cpu.eip);
+
   idex(eip, &opcode_table[opcode]);
 }
 //如果当前指令是跳转指令，则将指令指针设置为跳转目标地址，否则将其设置为顺序执行下一条指令的地址。

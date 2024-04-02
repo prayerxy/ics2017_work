@@ -9,6 +9,8 @@ make_EHelper(nemu_trap);
 
 
 
+//special.c
+make_EHelper(nop);
 
 
 //arith.c
@@ -28,3 +30,4 @@ make_EHelper(jcc);
 make_EHelper(jmp_rm);
 make_EHelper(ret);
 make_EHelper(call_rm);
+
