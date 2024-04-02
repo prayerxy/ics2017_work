@@ -29,6 +29,7 @@ static inline make_DopHelper(I) {
  * function to decode it.
  */
 /* sign immediate */
+//有符号立即数
 static inline make_DopHelper(SI) {
   assert(op->width == 1 || op->width == 4);
 
@@ -40,7 +41,14 @@ static inline make_DopHelper(SI) {
    *
    op->simm = ???
    */
-  TODO();
+  uint32_t tt=instr_fetch(&cpu.eip,op->width);
+  if(op->width==1){
+    op->simm=(int8_t)tt;
+  }
+  else{
+    assert(op->width==4);
+    op->simm=(int32_t)tt;
+  }
 
   rtl_li(&op->val, op->simm);
 
