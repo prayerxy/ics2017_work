@@ -34,7 +34,7 @@ make_EHelper(call) {
 }
 
 make_EHelper(ret) {
-  
+  printf("NO!SHHS\n");
 
   print_asm("ret");
 }
