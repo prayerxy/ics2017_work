@@ -143,7 +143,7 @@ static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
 
 static inline void rtl_push(const rtlreg_t* src1) {
   // esp <- esp - 4
-  cpu.esp=cpu.esp-4;
+  cpu.esp-=4;
   // M[esp] <- src1
   rtl_sm(&cpu.esp,4,src1);
   
@@ -153,7 +153,7 @@ static inline void rtl_pop(rtlreg_t* dest) {
   // dest <- M[esp]
   rtl_lm(dest,&cpu.esp,4);
   // esp <- esp + 4
-  cpu.esp=cpu.esp+4;
+  cpu.esp+=4;
 }
 
 static inline void rtl_eq0(rtlreg_t* dest, const rtlreg_t* src1) {
@@ -176,7 +176,7 @@ static inline void rtl_neq0(rtlreg_t* dest, const rtlreg_t* src1) {
 //提取出最高有效位
 static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- src1[width * 8 - 1]
-  rtl_shri(dest,src1,width*8-1);
+  *dest = ((*src1) >> ((width*8) - 1)) & 0x1;
 }
 
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
