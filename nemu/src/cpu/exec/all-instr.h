@@ -20,6 +20,7 @@ make_EHelper(xor);
 //data-mov.c
 make_EHelper(pop);
 make_EHelper(push);
+make_EHelper(leave);
 
 
 
