@@ -40,7 +40,6 @@ make_EHelper(sub) {
 
  //a-(-b)  OF
   rtl_xor(&t0, &id_dest->val, &id_src->val);
-
   rtl_xor(&t1, &id_dest->val, &t2);
   rtl_and(&t0, &t0, &t1);
   rtl_msb(&t0, &t0, id_dest->width);
@@ -57,14 +56,29 @@ make_EHelper(cmp) {
 }
 
 make_EHelper(inc) {
-  TODO();
+
+  rtl_addi(&t2,&id_dest->val,1);
+
+  operand_write(id_dest,&t2);
+
+  rtl_update_ZFSF(&t2,id_dest->width);
+  //只有从正数加到负数是溢出
+
+  rtl_eqi(&t1,&t2,0x80000000);
+  rtl_set_OF(&t1);
 
   print_asm_template1(inc);
 }
 
 make_EHelper(dec) {
-  TODO();
+ 
+  rtl_subi(&t2,&id_dest->val,1);
+  operand_write(id_dest,&t2);
+  rtl_update_ZFSF(&t2,id_dest->width);
 
+  //负数减成正数为溢出
+  rtl_eqi(&t1,&t2,0x7fffffff);
+  rtl_set_OF(&t1);
   print_asm_template1(dec);
 }
 

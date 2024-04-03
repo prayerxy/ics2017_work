@@ -81,6 +81,7 @@ static inline make_DopHelper(a) {
  */
 static inline make_DopHelper(r) {
   op->type = OP_TYPE_REG;
+  //opcode低3位确定寄存器编号
   op->reg = decoding.opcode & 0x7;
   if (load_val) {
     rtl_lr(&op->val, op->reg, op->width);
