@@ -116,7 +116,7 @@ make_EHelper(neg) {
   rtl_sub(&t2,&tzero,&id_dest->val);
   operand_write(id_dest,&t2);
   rtl_update_ZFSF(&t2, id_dest->width);
-  //of套用sub的方式
+  //of套用sub的方式 只有0x80000000会溢出
   rtl_xor(&t0, &tzero, &id_dest->val);
   rtl_xor(&t1, &tzero, &t2);
   rtl_and(&t0, &t0, &t1);
