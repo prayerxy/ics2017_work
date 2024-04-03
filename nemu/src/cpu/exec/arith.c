@@ -50,8 +50,23 @@ make_EHelper(sub) {
 }
 
 make_EHelper(cmp) {
-  TODO();
+  
+  //与sub类似，但是不储存值
+  rtl_sext(&id_src->val, &id_src->val, id_src->width);
+  rtl_sub(&t2, &id_dest->val, &id_src->val);
+ 
+  rtl_sltu(&t3, &id_dest->val, &t2);
+  rtl_update_ZFSF(&t2, id_dest->width);
 
+  rtl_sltu(&t0, &id_dest->val, &t2);
+  rtl_or(&t0, &t3, &t0);
+  rtl_set_CF(&t0);
+
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
   print_asm_template2(cmp);
 }
 
@@ -63,9 +78,14 @@ make_EHelper(inc) {
 
   rtl_update_ZFSF(&t2,id_dest->width);
   //只有从正数加到负数是溢出
-
-  rtl_eqi(&t1,&t2,0x80000000);
-  rtl_set_OF(&t1);
+  // rtl_li(&t0, 1);
+  // rtl_xor(&t0, &id_dest->val, &t0);
+  // rtl_not(&t0);//是否为正数
+  // rtl_xor(&t1, &id_dest->val, &t2);
+  // rtl_and(&t0, &t0, &t1);
+  // rtl_msb(&t0, &t0, id_dest->width);
+  rtl_eqi(&t0,&t2,0x80000000);
+  rtl_set_OF(&t0);
 
   print_asm_template1(inc);
 }
@@ -77,13 +97,31 @@ make_EHelper(dec) {
   rtl_update_ZFSF(&t2,id_dest->width);
 
   //负数减成正数为溢出
-  rtl_eqi(&t1,&t2,0x7fffffff);
-  rtl_set_OF(&t1);
+  // rtl_li(&t0, 1);
+  // rtl_xor(&t0, &id_dest->val, &t0);
+  // rtl_xor(&t1, &id_dest->val, &t2);
+  // rtl_and(&t0, &t0, &t1);
+  // rtl_msb(&t0, &t0, id_dest->width);
+  rtl_eqi(&t0,&t2,0x7fffffff);
+  rtl_set_OF(&t0);
   print_asm_template1(dec);
 }
 
 make_EHelper(neg) {
-  TODO();
+  //0-dest
+  if(id_dest->val==0){
+    cpu.CF=0;
+  }
+  else cpu.CF=1;
+  rtl_sub(&t2,&tzero,&id_dest->val);
+  operand_write(id_dest,&t2);
+  rtl_update_ZFSF(&t2, id_dest->width);
+  //of套用sub的方式
+  rtl_xor(&t0, &tzero, &id_dest->val);
+  rtl_xor(&t1, &tzero, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
 
   print_asm_template1(neg);
 }
