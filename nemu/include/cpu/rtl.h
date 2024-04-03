@@ -208,13 +208,13 @@ static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
   //保留有效位 4-width  避免用到临时寄存器
-  rtlreg_t tmp=(*result)&(~0u>>((4-width)<<3));
+  rtlreg_t tmp=(*result)&(0xffffffff>>((4-width)*8));
   cpu.ZF=(tmp==0);
 }
 
 static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
-  rtlreg_t tmp=0;
+  rtlreg_t tmp=0;//避免在rtl中使用临时寄存器t
   rtl_msb(&tmp,result,width);
   cpu.SF=tmp;
 }

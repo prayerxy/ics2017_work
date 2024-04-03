@@ -44,13 +44,8 @@ static inline make_DopHelper(SI) {
    */
   //注意是eip  不是cpu.eip
   uint32_t tt=instr_fetch(eip,op->width);
-  if(op->width==1){
-    op->simm=(int8_t)tt;
-  }
-  else{
-    assert(op->width==4);
-    op->simm=(int32_t)tt;
-  }
+  rtl_sext(&tt, &tt, op->width);
+  op->simm=(int32_t)tt;
 
   rtl_li(&op->val, op->simm);
 
@@ -221,7 +216,7 @@ make_DHelper(SI2E) {
   id_src->width = 1;
   decode_op_SI(eip, id_src, true);
   if (id_dest->width == 2) {
-    id_src->val &= 0xffff;
+    id_src->val &= 0xffff;//由于符号扩展可能将高16位也扩展了
   }
 }
 

@@ -24,10 +24,7 @@ make_EHelper(add) {
 
 make_EHelper(sub) {
   
-  //需要符号扩展   有一种情况src byte; dest word or dword  需要符号扩展
-  //因为初始设置所有op的宽度相同
-  rtl_sext(&id_src->val, &id_src->val, id_src->width);
-
+  //需要符号扩展的情况decode已经做了 SI2G
   rtl_sub(&t2, &id_dest->val, &id_src->val);
  
   rtl_sltu(&t3, &id_dest->val, &t2);
@@ -52,7 +49,6 @@ make_EHelper(sub) {
 make_EHelper(cmp) {
   
   //与sub类似，但是不储存值
-  rtl_sext(&id_src->val, &id_src->val, id_src->width);
   rtl_sub(&t2, &id_dest->val, &id_src->val);
  
   rtl_sltu(&t3, &id_dest->val, &t2);
