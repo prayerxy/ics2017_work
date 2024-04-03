@@ -14,8 +14,10 @@ make_EHelper(nop);
 
 
 //arith.c
+make_EHelper(add);
 make_EHelper(sub);
 make_EHelper(xor);
+
 
 //data-mov.c
 make_EHelper(pop);
