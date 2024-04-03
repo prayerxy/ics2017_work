@@ -43,7 +43,8 @@ static make_EHelper(name) { \
 }
 //
 /* 0x80, 0x81, 0x83 */
-//扩展的opcode exp-code=5
+//扩展的 sub opcode exp-code=5
+//扩展的 xor opcode exp-code=6
 make_group(gp1,
     EMPTY, EMPTY, EMPTY, EMPTY,
     EMPTY,EX(sub), EX(xor), EMPTY)

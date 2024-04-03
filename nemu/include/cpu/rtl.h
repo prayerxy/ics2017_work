@@ -93,6 +93,7 @@ static inline void rtl_sr_l(int r, const rtlreg_t* src1) {
 }
 
 /* RTL psuedo instructions */
+//尽量避免使用t0等临时寄存器
 //rtl伪指令，通过RTL基本指令或者已经实现的RTL伪指令来实现的
 //带宽度的通用寄存器访问
 static inline void rtl_lr(rtlreg_t* dest, int r, int width) {
