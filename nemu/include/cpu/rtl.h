@@ -7,7 +7,7 @@ extern rtlreg_t t0, t1, t2, t3;
 extern const rtlreg_t tzero;
 
 /* RTL basic instructions */
-
+//立即数读入
 static inline void rtl_li(rtlreg_t* dest, uint32_t imm) {
   *dest = imm;
 }
@@ -31,7 +31,7 @@ static inline void rtl_li(rtlreg_t* dest, uint32_t imm) {
     *dest = concat(c_, name) (*src1, imm); \
   }
 
-
+//调用它生成两个函数 ：寄存器-寄存器类型    立即数-寄存器类型
 make_rtl_arith_logic(add)
 make_rtl_arith_logic(sub)
 make_rtl_arith_logic(and)
@@ -58,33 +58,28 @@ static inline void rtl_div(rtlreg_t* q, rtlreg_t* r, const rtlreg_t* src1_hi, co
 static inline void rtl_idiv(rtlreg_t* q, rtlreg_t* r, const rtlreg_t* src1_hi, const rtlreg_t* src1_lo, const rtlreg_t* src2) {
   asm volatile("idiv %4" : "=a"(*q), "=d"(*r) : "d"(*src1_hi), "a"(*src1_lo), "r"(*src2));
 }
-
+//内存的访问   load memory
 static inline void rtl_lm(rtlreg_t *dest, const rtlreg_t* addr, int len) {
   *dest = vaddr_read(*addr, len);
 }
-
+//store memory
 static inline void rtl_sm(rtlreg_t* addr, int len, const rtlreg_t* src1) {
-  // printf("in save memory1\n");
-  // printf("addr: %p\n",addr);
-  // printf("addr's value: %p\n", *addr);
-  // printf("src: %p\n",src1);
-  // printf("src's value: %p\n", *src1);
   vaddr_write(*addr, len, *src1);
-  // printf("in save memory2\n");
 }
-
+//通用寄存器的访问  取出数值
+//b是1位
 static inline void rtl_lr_b(rtlreg_t* dest, int r) {
   *dest = reg_b(r);
 }
-
+//w是2位
 static inline void rtl_lr_w(rtlreg_t* dest, int r) {
   *dest = reg_w(r);
 }
-
+//l是4位
 static inline void rtl_lr_l(rtlreg_t* dest, int r) {
   *dest = reg_l(r);
 }
-
+//store
 static inline void rtl_sr_b(int r, const rtlreg_t* src1) {
   reg_b(r) = *src1;
 }
@@ -98,7 +93,9 @@ static inline void rtl_sr_l(int r, const rtlreg_t* src1) {
 }
 
 /* RTL psuedo instructions */
-
+//尽量避免使用t0等临时寄存器
+//rtl伪指令，通过RTL基本指令或者已经实现的RTL伪指令来实现的
+//带宽度的通用寄存器访问
 static inline void rtl_lr(rtlreg_t* dest, int r, int width) {
   switch (width) {
     case 4: rtl_lr_l(dest, r); return;
@@ -107,7 +104,7 @@ static inline void rtl_lr(rtlreg_t* dest, int r, int width) {
     default: assert(0);
   }
 }
-
+//带宽度的通用寄存器访问
 static inline void rtl_sr(int r, int width, const rtlreg_t* src1) {
   switch (width) {
     case 4: rtl_sr_l(r, src1); return;
@@ -116,114 +113,100 @@ static inline void rtl_sr(int r, int width, const rtlreg_t* src1) {
     default: assert(0);
   }
 }
-
+//EFLAGS标志位的读写
 #define make_rtl_setget_eflags(f) \
   static inline void concat(rtl_set_, f) (const rtlreg_t* src) { \
-    cpu.f = *src; \
+    cpu.f=*src; \
   } \
   static inline void concat(rtl_get_, f) (rtlreg_t* dest) { \
-    *dest = cpu.f; \
+    *dest=cpu.f; \
   }
 
 make_rtl_setget_eflags(CF)
 make_rtl_setget_eflags(OF)
 make_rtl_setget_eflags(ZF)
 make_rtl_setget_eflags(SF)
-
+//数据移动
 static inline void rtl_mv(rtlreg_t* dest, const rtlreg_t *src1) {
   // dest <- src1
-  *dest = *src1;
+  *dest=*src1;
 }
 
 static inline void rtl_not(rtlreg_t* dest) {
   // dest <- ~dest
-  *dest = ~(*dest);
+  *dest=~(*dest);
 }
-
+//符号扩展
 static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- signext(src1[(width * 8 - 1) .. 0])
-  rtl_li(&t1,32-width*8);
-  rtl_shl(dest,src1,&t1);
-  rtl_sar(dest,dest,&t1);
-  /*
-    rtlreg_t tmp=(*src1)&(~0u >> ((4-width)<<3));
+  //利用右移扩展
+  int32_t result = (int32_t)*src1;
     switch(width){
-      case 4:*dest=(uint32_t)tmp;break;
-      case 2:*dest=(uint32_t)(int16_t)tmp;break;
-      case 1:*dest=(uint32_t)(int8_t)tmp;break;
-      default:assert(0);
+        case 1:
+            result <<= 24;
+            result >>= 24;
+            break;
+        case 2:
+            result <<= 16;
+            result >>= 16;
+            break;
+        case 4:
+            break;
+        default:
+            assert(0);
     }
-  */
+  *dest = result;
 }
 
 static inline void rtl_push(const rtlreg_t* src1) {
   // esp <- esp - 4
+  cpu.esp-=4;
   // M[esp] <- src1
-  //return;
-  // printf("hello1\n");
-  cpu.esp = cpu.esp - 4;
-  // printf("hello2\n");
-  // printf("%p\n",cpu.esp);
-  // printf("%p\n",&cpu.esp);
-  // printf("%p\n",*(&cpu.esp));
   rtl_sm(&cpu.esp,4,src1);
-  // printf("hello3\n");
+  
 }
 
 static inline void rtl_pop(rtlreg_t* dest) {
   // dest <- M[esp]
-  // esp <- esp + 4
   rtl_lm(dest,&cpu.esp,4);
-  cpu.esp=cpu.esp+4;
+  // esp <- esp + 4
+  cpu.esp+=4;
 }
 
 static inline void rtl_eq0(rtlreg_t* dest, const rtlreg_t* src1) {
   // dest <- (src1 == 0 ? 1 : 0)
-  rtlreg_t tmp=*src1==0?1:0;
-  rtl_lm(dest,&tmp,4);
+  *dest=(*src1)==0?1:0;
+
 }
 
 static inline void rtl_eqi(rtlreg_t* dest, const rtlreg_t* src1, int imm) {
   // dest <- (src1 == imm ? 1 : 0)
-  rtlreg_t tmp=*src1==imm?1:0;
-  rtl_lm(dest,&tmp,4);
+  *dest=(*src1)==imm?1:0;
 }
 
 static inline void rtl_neq0(rtlreg_t* dest, const rtlreg_t* src1) {
   // dest <- (src1 != 0 ? 1 : 0)
-  rtlreg_t tmp=*src1!=0?1:0;
-  rtl_lm(dest,&tmp,4);
-}
+  *dest=(*src1)!=0?1:0;
 
-static inline void rtl_rol(rtlreg_t *dest, const rtlreg_t *src1, const rtlreg_t *src2) {
-  rtlreg_t tmp = *src1;
-  rtl_li(&t0, *src2);
-  while (t0 --) {
-	if((tmp >> 31) & 1) {
-      tmp = tmp << 1 | 0x1;
-	} 
-	else 
-	  tmp = tmp << 1;
-  }
-  *dest = tmp;
 }
-
+//提取出最高有效位
 static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- src1[width * 8 - 1]
-  // *dest = ((*src1) >> ((width << 3) - 1)) & 0x1;
-  rtl_shri(dest,src1,width*8-1);
+  *dest = ((*src1) >> ((width*8) - 1)) & 0x1;
 }
 
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
-  cpu.ZF=((*result)&(~0u>>((4-width)<<3)))==0;
+  //保留有效位 4-width  避免用到临时寄存器
+  rtlreg_t tmp=(*result)&(0xffffffff>>((4-width)*8));
+  cpu.ZF=(tmp==0);
 }
 
 static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
-  // cpu.SF=((*result)&(1<<((width<<3)-1)))!=0;
-  rtl_msb(&t0, result, width);
-  cpu.SF = t0;
+  rtlreg_t tmp=0;//避免在rtl中使用临时寄存器t
+  rtl_msb(&tmp,result,width);
+  cpu.SF=tmp;
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t* result, int width) {
