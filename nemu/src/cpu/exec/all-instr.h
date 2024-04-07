@@ -46,13 +46,10 @@ make_EHelper(test);
 make_EHelper(mov);
 make_EHelper(pop);
 make_EHelper(push);
-make_EHelper(pusha);
-make_EHelper(popa);
 make_EHelper(leave);
 make_EHelper(cltd);
 make_EHelper(cwtl);
 make_EHelper(movsx);
-make_EHelper(movsxy);
 make_EHelper(movzx);
 make_EHelper(lea);
 
