@@ -46,7 +46,7 @@ static make_EHelper(name) { \
 //扩展的 sub opcode exp-code=5
 //扩展的 xor opcode exp-code=6
 make_group(gp1,
-    EX(add),EX(or), EMPTY, EX(sbb),
+    EX(add),EX(or), EX(adc), EX(sbb),
     EX(and),EX(sub), EX(xor), EX(cmp))
 
   /* 0xc0, 0xc1, 0xd0, 0xd1, 0xd2, 0xd3 */
