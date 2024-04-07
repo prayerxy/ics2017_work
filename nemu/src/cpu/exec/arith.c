@@ -1,56 +1,49 @@
 #include "cpu/exec.h"
 
 make_EHelper(add) {
-  
   rtl_add(&t2, &id_dest->val, &id_src->val);
-  rtl_sltu(&t3, &id_dest->val, &t2);
-  operand_write(id_dest,&t2);
+  rtl_sltu(&t3, &t2, &id_dest->val);
+  operand_write(id_dest, &t2);
 
   rtl_update_ZFSF(&t2, id_dest->width);
 
-  rtl_sltu(&t0, &id_dest->val, &t2);
+  rtl_sltu(&t0, &t2, &id_dest->val);
   rtl_or(&t0, &t3, &t0);
   rtl_set_CF(&t0);
 
-  //overflow  a+b  最后OF
   rtl_xor(&t0, &id_dest->val, &id_src->val);
-  rtl_not(&t0);//a+b最高位符号相同为1
-  rtl_xor(&t1, &id_dest->val, &t2);//a与结果c符号不同为1
-  rtl_and(&t0, &t0, &t1);
-  rtl_msb(&t0, &t0, id_dest->width);
-  rtl_set_OF(&t0);
-  print_asm_template2(add);
-}
-
-make_EHelper(sub) {
-  
-  //需要符号扩展的情况decode已经做了 SI2G
-  rtl_sub(&t2, &id_dest->val, &id_src->val);
- 
-  rtl_sltu(&t3, &id_dest->val, &t2);
-  operand_write(id_dest,&t2);
-  rtl_update_ZFSF(&t2, id_dest->width);
-
-  rtl_sltu(&t0, &id_dest->val, &t2);
-  rtl_or(&t0, &t3, &t0);
-  rtl_set_CF(&t0);
-
- //a-(-b)  OF
-  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_not(&t0);
   rtl_xor(&t1, &id_dest->val, &t2);
   rtl_and(&t0, &t0, &t1);
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
 
+  print_asm_template2(add);
+}
+
+make_EHelper(sub) {
+  rtl_sext(&id_src->val, &id_src->val, id_src->width);
+  rtl_sub(&t2, &id_dest->val, &id_src->val);
+  rtl_sltu(&t3, &id_dest->val, &t2);
+  operand_write(id_dest, &t2);
+  rtl_update_ZFSF(&t2, id_dest->width);
+
+  rtl_sltu(&t0, &id_dest->val, &t2);
+  rtl_or(&t0, &t3, &t0);
+  rtl_set_CF(&t0);
+
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
 
   print_asm_template2(sub);
 }
 
 make_EHelper(cmp) {
-  
-  //与sub类似，但是不储存值
+  // rtl_sext(&id_src->val, &id_src->val, id_src->width);
   rtl_sub(&t2, &id_dest->val, &id_src->val);
- 
   rtl_sltu(&t3, &id_dest->val, &t2);
   rtl_update_ZFSF(&t2, id_dest->width);
 
@@ -63,58 +56,68 @@ make_EHelper(cmp) {
   rtl_and(&t0, &t0, &t1);
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
+
+  // printf("o1: %d , o2: %d\n", id_dest->val, id_src->val);
+  
+  // rtl_sub(&t0, &id_dest->val, &id_src->val);
+  // rtl_update_ZFSF(&t0, id_dest->width);
+  // rtl_sltu(&t1, &id_dest->val, &id_src->val);
+  // rtl_set_CF(&t1);
+
+  // rtl_xor(&t0, &id_dest->val, &t0);
+  // rtl_xor(&t1, &id_dest->val, &id_src->val);
+  // rtl_and(&t0, &t0, &t1);
+  // rtl_msb(&t0, &t0, id_dest->width);
+  // rtl_set_OF(&t0);
+
   print_asm_template2(cmp);
 }
 
 make_EHelper(inc) {
+  rtl_addi(&t2, &id_dest->val, 1);
+  operand_write(id_dest, &t2);
 
-  rtl_addi(&t2,&id_dest->val,1);
+  rtl_update_ZFSF(&t2, id_dest->width);
 
-  operand_write(id_dest,&t2);
-
-  rtl_update_ZFSF(&t2,id_dest->width);
-  //只有从正数加到负数是溢出
-  // rtl_li(&t0, 1);
-  // rtl_xor(&t0, &id_dest->val, &t0);
-  // rtl_not(&t0);//是否为正数
-  // rtl_xor(&t1, &id_dest->val, &t2);
-  // rtl_and(&t0, &t0, &t1);
-  // rtl_msb(&t0, &t0, id_dest->width);
-  rtl_eqi(&t0,&t2,0x80000000);
+  rtl_li(&t0, 1);
+  rtl_xor(&t0, &id_dest->val, &t0);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
 
   print_asm_template1(inc);
 }
 
 make_EHelper(dec) {
- 
-  rtl_subi(&t2,&id_dest->val,1);
-  operand_write(id_dest,&t2);
-  rtl_update_ZFSF(&t2,id_dest->width);
+  rtl_subi(&t2, &id_dest->val, 1);
+  operand_write(id_dest, &t2);
 
-  //负数减成正数为溢出
-  // rtl_li(&t0, 1);
-  // rtl_xor(&t0, &id_dest->val, &t0);
-  // rtl_xor(&t1, &id_dest->val, &t2);
-  // rtl_and(&t0, &t0, &t1);
-  // rtl_msb(&t0, &t0, id_dest->width);
-  rtl_eqi(&t0,&t2,0x7fffffff);
+  rtl_update_ZFSF(&t2, id_dest->width);
+
+  rtl_li(&t0, 1);
+  rtl_xor(&t0, &id_dest->val, &t0);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
+
   print_asm_template1(dec);
 }
 
 make_EHelper(neg) {
-  //0-dest
-  if(id_dest->val==0){
-    cpu.CF=0;
-  }
-  else cpu.CF=1;
-  rtl_sub(&t2,&tzero,&id_dest->val);
-  operand_write(id_dest,&t2);
+  rtl_li(&t2, id_dest->val);
+  rtl_not(&t2);
+  rtl_addi(&t2, &t2, 1);
+  operand_write(id_dest, &t2);
+  
   rtl_update_ZFSF(&t2, id_dest->width);
-  //of套用sub的方式 只有0x80000000会溢出
-  rtl_xor(&t0, &tzero, &id_dest->val);
-  rtl_xor(&t1, &tzero, &t2);
+
+  t1 = (id_dest->val != 0);
+  rtl_set_CF(&t1);
+
+  rtl_xor(&t0, &id_dest->val, &t0);
+  rtl_xor(&t1, &id_dest->val, &t2);
   rtl_and(&t0, &t0, &t1);
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
@@ -307,5 +310,3 @@ make_EHelper(idiv) {
 
   print_asm_template1(idiv);
 }
-
-
