@@ -13,38 +13,30 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
   // TODO: Query EFLAGS to determine whether the condition code is satisfied.
   // dest <- ( cc is satisfied ? 1 : 0)
   switch (subcode & 0xe) {
-    case CC_O:{
-      *dest = cpu.OF;
+    case CC_O:
+      *dest = cpu.OF==1?1:0;
       break;
-    }
-    case CC_B:{
-      *dest = cpu.CF;
+    case CC_B:
+      *dest = cpu.CF==1?1:0;
       break;
-    }
-    case CC_E:{
-      *dest = cpu.ZF;
+    case CC_E:
+      *dest = cpu.ZF==1?1:0;
       break;
-    }
-    case CC_BE:{
+    case CC_BE:
       *dest = cpu.ZF || cpu.CF;
       break;
-    }
-    case CC_S:{
-      *dest = cpu.SF;
+    case CC_S:
+      *dest = cpu.SF==1?1:0;
       break;
-    }
-    case CC_L:{
+    case CC_L:
       *dest = cpu.SF != cpu.OF;
       break;
-    }
-    case CC_LE:{
+    case CC_LE:
       *dest = (cpu.ZF || (cpu.SF != cpu.OF));
       break;
-    }
     default: panic("should not reach here");
     case CC_P: panic("n86 does not have PF");
   }
-
   if (invert) {
     rtl_xori(dest, dest, 0x1);
   }
