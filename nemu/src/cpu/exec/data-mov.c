@@ -63,7 +63,7 @@ make_EHelper(cwtl) {
     cpu.eax = (cpu.eax & 0xffff0000) | (t0 & 0xffff);
   }
   else {
-     rtl_sext(&cpu.eax, &cpu.eax, 2);
+    rtl_sext(&cpu.eax, &cpu.eax, 2);
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
