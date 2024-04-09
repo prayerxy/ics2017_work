@@ -59,8 +59,8 @@ make_EHelper(cltd) {
 
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
-    rtl_sext(&t0, &cpu.eax, 1);
-    cpu.eax = (cpu.eax & 0xffff0000) | (t0 & 0xffff);
+    rtl_sext(&t1, &cpu.eax, 1);//al 扩展给ax
+    cpu.eax = (cpu.eax & 0xffff0000) | (t1 & 0xffff);
   }
   else {
     rtl_sext(&cpu.eax, &cpu.eax, 2);
