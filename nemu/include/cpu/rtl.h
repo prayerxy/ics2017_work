@@ -158,7 +158,7 @@ static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   *dest = result;
 }
 
- void rtl_push(const rtlreg_t* src1) {
+static inline void rtl_push(const rtlreg_t* src1) {
   // esp <- esp - 4
   cpu.esp-=4;
   // M[esp] <- src1
