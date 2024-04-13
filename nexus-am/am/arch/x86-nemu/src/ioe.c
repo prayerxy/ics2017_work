@@ -26,9 +26,9 @@ void _draw_rect(const uint32_t *pixels, int x, int y, int w, int h) {
   //矩形绘制不会超出屏幕的右边缘
   int r_w = (w > _screen.width - x) ? _screen.width - x : w;
   //一行绘制的bytes
-  int cp_bytes = r_w * sizeof(uint32_t);
+  int w_bytes = r_w * sizeof(uint32_t);
   for (int i = 0; i < h && y + i < _screen.height; i++) {
-    memcpy(&fb[(y + i) * _screen.width + x], pixels+i*w, cp_bytes);
+    memcpy(&fb[(y + i) * _screen.width + x], pixels+i*w, w_bytes);
   }
 }
 
