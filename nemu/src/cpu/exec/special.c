@@ -2,6 +2,7 @@
 #include "monitor/monitor.h"
 
 make_EHelper(nop) {
+  //xchg指令实际上是nop
   print_asm("nop");
 }
 
