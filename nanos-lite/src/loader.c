@@ -6,7 +6,7 @@ extern void ramdisk_read(void *, off_t, size_t);
 
 uintptr_t loader(_Protect *as, const char *filename) {
   //将ramdisk中从0开始的所有内容放置在default_entry处的位置
-  // size_t size = get_ramdisk_size();
-  // ramdisk_read(DEFAULT_ENTRY, 0, size); 
+  size_t size = get_ramdisk_size();
+  ramdisk_read(DEFAULT_ENTRY, 0, size); 
   return (uintptr_t)DEFAULT_ENTRY;
 }
