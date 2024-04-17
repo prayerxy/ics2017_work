@@ -32,7 +32,7 @@ int main() {
   uint32_t entry = loader(NULL, NULL);
   //跳转到用户程序入口执行
   ((void (*)(void))entry)();
-  Log("'Hello World!' from Nanos-lite");
+  
 
   panic("Should not reach here");
 }
