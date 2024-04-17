@@ -22,7 +22,7 @@ int main() {
   init_ramdisk();
   //初始化设备
   init_device();
-
+   Log("'Hello World!' from Nanos-lite");
 #ifdef HAS_ASYE
   Log("Initializing interrupt/exception handler...");
   init_irq();
