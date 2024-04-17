@@ -30,9 +30,9 @@ int main() {
   init_fs();
   //加载用户程序  返回程序的入口地址
   uint32_t entry = loader(NULL, NULL);
-  Log("'Hello World!' from Nanos-lite");
   //跳转到用户程序入口执行
   ((void (*)(void))entry)();
+  Log("'Hello World!' from Nanos-lite");
 
   panic("Should not reach here");
 }
