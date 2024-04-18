@@ -11,6 +11,7 @@ _RegSet* irq_handle(_RegSet *tf) {
   if (H) {
     _Event ev;
     switch (tf->irq) {
+      //异常封装为事件
       case 0x80: ev.event = _EVENT_SYSCALL; break;
       default: ev.event = _EVENT_ERROR; break;
     }

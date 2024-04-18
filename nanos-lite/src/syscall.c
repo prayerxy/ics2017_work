@@ -1,11 +1,18 @@
 #include "common.h"
 #include "syscall.h"
 
+static inline void do_sys_none(_RegSet*r){
+  SYSCALL_ARG1(r)=1;
+}
+
 _RegSet* do_syscall(_RegSet *r) {
   uintptr_t a[4];
   a[0] = SYSCALL_ARG1(r);
 
   switch (a[0]) {
+    case SYS_none:
+      do_sys_none(r);
+      break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 
