@@ -13,6 +13,8 @@
 
 int _syscall_(int type, uintptr_t a0, uintptr_t a1, uintptr_t a2){
   int ret = -1;
+  //中断 os捕获异常发现是一个系统调用，然后使用相应的处理函数进行处理，处理结束后设置好返回值
+  //从%eax寄存器中取出系统调用的返回值
   asm volatile("int $0x80": "=a"(ret): "a"(type), "b"(a0), "c"(a1), "d"(a2));
   return ret;
 }
