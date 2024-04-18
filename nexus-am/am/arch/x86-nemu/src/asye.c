@@ -27,7 +27,7 @@ _RegSet* irq_handle(_RegSet *tf) {
 static GateDesc idt[NR_IRQ];
 
 void _asye_init(_RegSet*(*h)(_Event, _RegSet*)) {
-  // initialize IDT
+  // initialize IDT  每一项是一个门描述符结构体
   for (unsigned int i = 0; i < NR_IRQ; i ++) {
     idt[i] = GATE(STS_TG32, KSEL(SEG_KCODE), vecnull, DPL_KERN);
   }
