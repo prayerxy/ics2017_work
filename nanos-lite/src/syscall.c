@@ -18,7 +18,7 @@ _RegSet* do_syscall(_RegSet *r) {
       do_sys_none(r);
       break;
     case SYS_exit:
-      //sys_exit中并把第一个参数(退出状态)写到ebx寄存器中。 
+      //sys_exit中把第一个参数(退出状态)写到ebx寄存器中。 
       do_sys_exit(r);
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);
