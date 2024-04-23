@@ -13,7 +13,7 @@ static inline void do_sys_write(_RegSet*r){
   char* buf = (char*) SYSCALL_ARG3(r);
   int len = SYSCALL_ARG4(r);
   if(fd == 1 || fd == 2){
-    Log("fd:%d,len:%d",fd,len);
+    // Log("fd:%d,len:%d",fd,len);
     for(int i = 0; i < len; i++) {
       _putc(buf[i]);
     }
