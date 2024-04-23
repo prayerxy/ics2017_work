@@ -13,7 +13,7 @@ static inline void do_sys_write(_RegSet*r){
   char* buf = (char*) SYSCALL_ARG3(r);
   int len = SYSCALL_ARG4(r);
   if(fd == 1 || fd == 2){
-    Log("fd:%d,len:%d",fd,len);
+    // Log("fd:%d,len:%d",fd,len);
     for(int i = 0; i < len; i++) {
       _putc(buf[i]);
     }
@@ -22,6 +22,10 @@ static inline void do_sys_write(_RegSet*r){
     return ;
 	}
   Log("fd is not 1 or 2");
+}
+
+static inline do_sys_brk(_RegSet*r){
+  SYSCALL_ARG1(r) = 0;//表示堆区成功调整
 }
 _RegSet* do_syscall(_RegSet *r) {
   uintptr_t a[4];
@@ -40,6 +44,9 @@ _RegSet* do_syscall(_RegSet *r) {
       break;
     case SYS_write:
       do_sys_write(r);
+      break;
+    case SYS_brk:
+      do_sys_brk(r);
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
