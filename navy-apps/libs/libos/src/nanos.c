@@ -35,12 +35,12 @@ int _write(int fd, void *buf, size_t count){
 extern char _end;
 static intptr_t program_break = (intptr_t)&_end;
 void *_sbrk(intptr_t increment){
-  intptr_t olb=program_break;
-  intptr_t newbr=olb+increment;
-  int result=_syscall_(SYS_brk,newbr,0,0);
+  intptr_t old_brk=program_break;
+  intptr_t new_brk=old_brk+increment;
+  int result=_syscall_(SYS_brk,new_brk,0,0);
   if(result==0){
-    program_break=newbr;
-    return (void*)olb;
+    program_break=new_brk;
+    return (void*)old_brk;
   }
   else{
     return (void*)-1;
