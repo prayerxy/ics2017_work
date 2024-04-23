@@ -18,6 +18,7 @@ static inline void do_sys_write(_RegSet*r){
     }
     //设置返回值
     SYSCALL_ARG1(r)=len;
+    return ;
 	}
   Log("fd is not 1 or 2");
 }
