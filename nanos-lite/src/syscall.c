@@ -1,6 +1,6 @@
 #include "common.h"
 #include "syscall.h"
-
+#include "arch.h"
 static inline void do_sys_none(_RegSet*r){
   SYSCALL_ARG1(r)=1;//返回值置1
 }
