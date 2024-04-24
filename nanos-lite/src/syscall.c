@@ -27,6 +27,23 @@ static inline void do_sys_write(_RegSet*r){
 static inline void do_sys_brk(_RegSet*r){
   SYSCALL_ARG1(r) = 0;//表示堆区成功调整
 }
+
+static inline void do_sys_read(_RegSet*r){
+
+}
+
+static inline void do_sys_open(_RegSet*r){
+
+}
+
+static inline void do_sys_close(_RegSet*r){
+
+}
+
+static inline void do_sys_lseek(_RegSet*r){
+
+}
+
 _RegSet* do_syscall(_RegSet *r) {
   uintptr_t a[4];
   a[0] = SYSCALL_ARG1(r);
@@ -47,6 +64,14 @@ _RegSet* do_syscall(_RegSet *r) {
       break;
     case SYS_brk:
       do_sys_brk(r);
+      break;
+    case SYS_read:
+      break;
+    case SYS_open:
+      break;
+    case SYS_close:
+      break;
+    case SYS_lseek:
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
