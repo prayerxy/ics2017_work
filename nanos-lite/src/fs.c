@@ -88,6 +88,7 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
     //fb 帧缓冲区
       fb_write(buf, file_table[fd].open_offset, len);
       file_table[fd].open_offset+=len;
+      break;
     default:
     //对于标准输出和标准错误流，以及帧缓冲区，通常不会限制写入的长度
     //而对于文件写入，限制
