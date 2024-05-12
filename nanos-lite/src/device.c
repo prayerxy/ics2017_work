@@ -11,8 +11,8 @@ static const char *keyname[256] __attribute__((used)) = {
 size_t events_read(void *buf, size_t len) {
   int key = _read_key();
   bool isDown = false;
-  if(key & 0x8000 ) {
-    key ^= 0x8000;
+  if(key & 0x0800 ) {
+    key ^= 0x0800;
     isDown = true;
   }
   //返回系统启动后的时间
