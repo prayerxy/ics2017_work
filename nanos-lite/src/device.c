@@ -16,7 +16,7 @@ static char dispinfo[128] __attribute__((used));
 
 void dispinfo_read(void *buf, off_t offset, size_t len) {
   //用于把字符串dispinfo中offset开始的len字节写到buf中.
-  memcpy(buf, dispinfo + offset, len);
+  strncpy(buf, dispinfo + offset, len);
 }
 
 void fb_write(const void *buf, off_t offset, size_t len) {
