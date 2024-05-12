@@ -51,7 +51,6 @@ ssize_t fs_read(int fd, void *buf, size_t len){
   ssize_t fs_size= fs_filesz(fd);
   //限定len长度
   len = (file_table[fd].open_offset + len > fs_size)?(fs_size - file_table[fd].open_offset):len;
-  if(len<0)return 0;//读取完毕
   switch (fd)
   {
     case FD_STDIN:break;
@@ -63,7 +62,6 @@ ssize_t fs_read(int fd, void *buf, size_t len){
       len=events_read(buf,len);
       break;
     case FD_DISPINFO:
-    
       //状态信息
       dispinfo_read(buf,file_table[fd].open_offset,len);
       file_table[fd].open_offset += len;
