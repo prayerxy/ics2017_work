@@ -36,6 +36,7 @@ size_t fs_filesz(int fd){
 
 int fs_open(const char *pathname, int flags, int mode){
   //返回文件描述符fd 即下标
+  Log("pathName:%s\n",pathname);
   for(int i=0;i<NR_FILES;i++){
     if(strcmp(file_table[i].name,pathname)==0){
       return i;
