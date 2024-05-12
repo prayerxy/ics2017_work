@@ -18,7 +18,7 @@ size_t events_read(void *buf, size_t len) {
   //返回系统启动后的时间
   if(key == _KEY_NONE) {
     unsigned long t = _uptime();
-    sprintf(buf, "t %ld\n", t);
+    sprintf(buf, "t %d\n", t);
   } 
   else {//按键
     sprintf(buf, "%s %s\n", isDown ? "kd" : "ku", keyname[key]);
