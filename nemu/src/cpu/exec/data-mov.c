@@ -54,18 +54,13 @@ make_EHelper(leave) {
 
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
-    int16_t tmp=reg_w(0);//ax
-    if(tmp<0){
-      reg_w(2)=0xffff;//dx
-    }
-    else reg_w(2)=0;
+    rtl_lr(&t0,0,2);
+	rtl_sext(&t0,&t0,2);
+	rtl_sari(&t0,&t0,31);
+	rtl_sr(2,2,&t0);
   }
   else {
-    int32_t tmp=reg_w(0);//eax
-    if(tmp<0){
-      reg_l(2)=0xffffffff;//edx
-    }
-    else reg_l(2)=0;
+    rtl_sari(&cpu.edx,&cpu.eax,31);
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
