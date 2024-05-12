@@ -39,6 +39,7 @@ int fs_open(const char *pathname, int flags, int mode){
   Log("pathName:%s\n",pathname);
   for(int i=0;i<NR_FILES;i++){
     if(strcmp(file_table[i].name,pathname)==0){
+      Log("fd:%d\n",i);
       return i;
     }
   }
@@ -130,5 +131,6 @@ off_t fs_lseek(int fd, off_t offset, int whence){
   return ret;
 }
 int fs_close(int fd){
+  Log("fd:%d is closing\n",fd);
   return 0;//不用处理
 }
