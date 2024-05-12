@@ -132,6 +132,5 @@ off_t fs_lseek(int fd, off_t offset, int whence){
 }
 int fs_close(int fd){
   Log("fd:%d is closing\n",fd);
-  Log("s\n");
   return 0;//不用处理
 }
