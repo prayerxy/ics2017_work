@@ -51,7 +51,7 @@ ssize_t fs_read(int fd, void *buf, size_t len){
   ssize_t fs_size= fs_filesz(fd);
   //限定len长度
   len = (file_table[fd].open_offset + len > fs_size)?(fs_size - file_table[fd].open_offset):len;
-  // if(len<=0)return 0;//读取完毕
+  if(len<0)return 0;//读取完毕
   switch (fd)
   {
     case FD_STDIN:break;
