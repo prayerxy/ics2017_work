@@ -16,13 +16,13 @@ static char dispinfo[128] __attribute__((used));
 
 void dispinfo_read(void *buf, off_t offset, size_t len) {
   //用于把字符串dispinfo中offset开始的len字节写到buf中.
-  strncpy(buf, dispinfo + offset, len);
+  memcpy(buf, dispinfo + offset, len);
 }
 
 void fb_write(const void *buf, off_t offset, size_t len) {
   //用于把buf中的len字节写到屏幕上offset处
   //需要先从offset计算出屏幕上的坐标, 然后调用IOE的_draw_rect()接口.
-  if(len<=0){return;}
+  assert(len>=0);
   offset=offset/4;
   int x=offset%_screen.width;
   int y=offset/_screen.width;
