@@ -12,6 +12,7 @@ uintptr_t loader(_Protect *as, const char *filename) {
   // size_t size = get_ramdisk_size();
   // ramdisk_read(DEFAULT_ENTRY, 0, size); 
   
+  //使用文件系统
   int fd=fs_open(filename,0,0);
   ssize_t fs_size=fs_filesz(fd);
   fs_read(fd,DEFAULT_ENTRY,fs_size);

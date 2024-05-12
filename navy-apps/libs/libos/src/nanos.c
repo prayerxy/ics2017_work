@@ -33,7 +33,7 @@ int _write(int fd, void *buf, size_t count){
 
 //用于将用户程序的program break增长increment字节
 extern char _end;
-static intptr_t program_break = (intptr_t)&_end;
+static intptr_t program_break =(intptr_t)&_end;
 void *_sbrk(intptr_t increment){
   intptr_t old_brk=program_break;
   intptr_t new_brk=old_brk+increment;
