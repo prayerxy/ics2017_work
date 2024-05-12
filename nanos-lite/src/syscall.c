@@ -1,6 +1,12 @@
 #include "common.h"
 #include "syscall.h"
 #include "arch.h"
+
+extern int fs_open(const char *pathname, int flags, int mode);
+extern ssize_t fs_read(int fd, void *buf, size_t len);
+extern ssize_t fs_write(int fd, const void *buf, size_t len);
+extern off_t fs_lseek(int fd, off_t offset, int whence);
+extern int fs_close(int fd);
 static inline void do_sys_none(_RegSet*r){
   SYSCALL_ARG1(r)=1;//返回值置1
 }

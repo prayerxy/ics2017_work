@@ -30,6 +30,9 @@ void init_fs() {
   // TODO: initialize the size of /dev/fb
   file_table[FD_FB].size=_screen.height*_screen.width*4;
 }
+size_t fs_filesz(int fd){
+  return file_table[fd].size;//文件大小
+}
 
 int fs_open(const char *pathname, int flags, int mode){
   //返回文件描述符fd 即下标
@@ -40,6 +43,7 @@ int fs_open(const char *pathname, int flags, int mode){
   }
   printf("Should not reach here\n");
   assert(0);
+  return -1;
 }
 ssize_t fs_read(int fd, void *buf, size_t len){
   ssize_t fs_size= fs_filesz(fd);
@@ -126,7 +130,4 @@ off_t fs_lseek(int fd, off_t offset, int whence){
 }
 int fs_close(int fd){
   return 0;//不用处理
-}
-size_t fs_filesz(int fd){
-  return file_table[fd].size;//文件大小
 }
