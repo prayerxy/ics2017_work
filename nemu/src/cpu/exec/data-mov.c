@@ -52,18 +52,32 @@ make_EHelper(leave) {
   print_asm("leave");
 }
 
-make_EHelper(cltd) {
-  if (decoding.is_operand_size_16) {
-    rtl_lr(&t0,0,2);
-	rtl_sext(&t0,&t0,2);
-	rtl_sari(&t0,&t0,31);
-	rtl_sr(2,2,&t0);
-  }
-  else {
-    rtl_sari(&cpu.edx,&cpu.eax,31);
-  }
+// make_EHelper(cltd) {
+//   if (decoding.is_operand_size_16) {
+//     rtl_lr(&t0,0,2);
+// 	rtl_sext(&t0,&t0,2);
+// 	rtl_sari(&t0,&t0,31);
+// 	rtl_sr(2,2,&t0);
+//   }
+//   else {
+//     rtl_sari(&cpu.edx,&cpu.eax,31);
+//   }
 
-  print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
+//   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
+// }
+make_EHelper(cltd){
+    if(decoding.is_operand_size_16){
+        int16_t tmp=(int16_t)reg_w(0);//ax
+        if(tmp<0)
+            reg_w(2)=0xffff;//dx
+        else reg_w(2)=0;
+    }
+    else {
+        int32_t tmp=(int32_t)reg_w(0);//eax
+        if(tmp<0)reg_l(2)=0xffffffff;//edx
+        else reg_l(2)=0;
+    }
+    print_asm(decoding.is_operand_size_16 ?"cwtl" :"cltd");
 }
 
 make_EHelper(cwtl) {
