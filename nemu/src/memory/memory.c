@@ -70,7 +70,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
     uint32_t ret=0;
     //映射到两个不同页，不能一次性读出物理地址进行连续读len字节
     for(int i=0;i<len;i++){
-      paddr_t paddr=page_translate(addr,false);
+      paddr_t paddr=page_translate(addr+i,false);
       ret+=paddr_read(paddr,1)<<(8*i);
     }
     return ret;
@@ -86,7 +86,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
   if(ifcrossPage(addr,len)){
     for(int i=0;i<len;i++){
-      paddr_t paddr=page_translate(addr,1);
+      paddr_t paddr=page_translate(addr+i,1);
       paddr_write(paddr,1,data>>(8*i));
     }
   }
