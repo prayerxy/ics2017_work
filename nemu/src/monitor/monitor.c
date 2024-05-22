@@ -84,7 +84,7 @@ static inline void restart() {
   cpu.eip = ENTRY_START;
   //根据i386手册第174页，eflags 初值为0x2。
   cpu.cs=0x8;
-  // cpu.cr0=0x60000011;
+  cpu.cr0=0x60000011;
   cpu.eflags=0x2;
 #ifdef DIFF_TEST
   init_qemu_reg();
