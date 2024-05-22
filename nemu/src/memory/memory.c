@@ -67,7 +67,13 @@ bool ifcrossPage(vaddr_t vaddr,int len){
 //访问内存的函数 addr内存首地址 len代表读取内存的字节数
 uint32_t vaddr_read(vaddr_t addr, int len) {
   if(ifcrossPage(addr,len)){
-    assert(0);
+    uint32_t ret=0;
+    //映射到两个不同页，不能一次性读出物理地址进行连续读len字节
+    for(int i=0;i<len;i++){
+      paddr_t paddr=page_translate(addr,false);
+      ret+=paddr_read(paddr,1)<<(8*i);
+    }
+    return ret;
   }
   else{
     paddr_t paddr=page_translate(addr,false);
@@ -79,7 +85,10 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
   if(ifcrossPage(addr,len)){
-    assert(0);
+    for(int i=0;i<len;i++){
+      paddr_t paddr=page_translate(addr,1);
+      paddr_write(paddr,1,data>>(8*i));
+    }
   }
   else{
     paddr_t paddr=page_translate(addr,true);
