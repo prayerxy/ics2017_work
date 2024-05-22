@@ -1,6 +1,6 @@
 #ifndef __REG_H__
 #define __REG_H__
-
+#include "memory/mmu.h"
 #include "common.h"
 
 enum { R_EAX, R_ECX, R_EDX, R_EBX, R_ESP, R_EBP, R_ESI, R_EDI };
@@ -58,8 +58,8 @@ typedef struct {
     uint32_t base;//IDT的首地址
     uint16_t limit;//长度
   } idtr;
-  uint32_t cr0;
-  uint32_t cr3;
+  CR0 cr0;
+  CR3 cr3;
 } CPU_state;
 
 extern CPU_state cpu;

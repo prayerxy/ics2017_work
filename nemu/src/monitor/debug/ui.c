@@ -117,7 +117,7 @@ static int cmd_info(char *args){
     printf("reg\t16进制\t\t10进制\n");
     for(int i=0;i<8;i++)printf("%s\t0x%08x\t%d\n",regsl[i],reg_l(i),reg_l(i));
     printf("eip\t0x%08x\t%d\n",cpu.eip,cpu.eip);
-    printf("CR0=0x%08x，CR3=0x%08x\n",cpu.cr0,cpu.cr3);
+    printf("CR0=0x%08x，CR3=0x%08x\n",cpu.cr0.val,cpu.cr3.val);
   }
   else if(strcmp(arg,"w")==0){
     //打印监视点的信息
