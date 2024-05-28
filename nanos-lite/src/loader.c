@@ -7,6 +7,7 @@ extern int fs_open(const char* path, int flags, int mode);
 extern size_t fs_filesz(int fd);
 extern ssize_t fs_read(int fd, void* buf, size_t len);
 extern int fs_close(int fd);
+extern void* new_page(void);
 uintptr_t loader(_Protect *as, const char *filename) {
   //将ramdisk中从0开始的所有内容放置在default_entry处的位置
   // size_t size = get_ramdisk_size();
@@ -17,7 +18,7 @@ uintptr_t loader(_Protect *as, const char *filename) {
   ssize_t fs_size=fs_filesz(fd);
   // fs_read(fd,DEFAULT_ENTRY,fs_size);
   // fs_close(fd);
-  // return (uintptr_t)DEFAULT_ENTRY;
+  
 
    //loader需要申请物理页，建立虚拟地址与物理的对应关系
   int pageCount=fs_size/PGSIZE;
@@ -33,5 +34,5 @@ uintptr_t loader(_Protect *as, const char *filename) {
   }
   fs_close(fd);
 
- 
+  return (uintptr_t)DEFAULT_ENTRY;
 }

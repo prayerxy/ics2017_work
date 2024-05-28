@@ -69,7 +69,7 @@ void _switch(_Protect *p) {
 void _map(_Protect *p, void *va, void *pa) {
   //功能:将虚拟地址空间p中的虚拟地址va映射到物理地址pa
   //p->ptr为页目录基地址
-  PDE*pde=&((p->ptr)[PDX(va)]);
+  PDE*pde=&(((PDE*)(p->ptr))[PDX(va)]);
   PTE*pgtable=NULL;
   if(*pde&PTE_P){
     pgtable=(PTE*)PTE_ADDR(*pde);
