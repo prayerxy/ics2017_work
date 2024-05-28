@@ -38,6 +38,7 @@ int fs_open(const char *pathname, int flags, int mode){
   //返回文件描述符fd 即下标
   Log("pathName:%s\n",pathname);
   for(int i=0;i<NR_FILES;i++){
+    Log("filename:%s\n",file_table[i].name);
     if(strcmp(file_table[i].name,pathname)==0){
       Log("fd:%d\n",i);
       return i;
