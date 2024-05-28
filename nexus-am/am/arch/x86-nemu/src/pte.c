@@ -93,11 +93,12 @@ _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *cons
 
     uint32_t *tmp = ustack.end;
     uint32_t rem[30] = {
+      0, 0, 0, 0, 0, 0, 0, 0,            // ustack尾部多余值
       0x202, 0x8, (uint32_t)entry, 0x0,  // eflags, cs, eip, error code
       0x81,                              // irq
       0, 0, 0, 0, 0, 0, 0, 0             // 后8个GPRs (edi, esi, ebp, esp, ebx, edx, ecx, eax)
     };
-    for (int i = 0; i < (8 + 5 ); i++) {
+    for (int i = 0; i < (8 + 5 + 8); i++) {
       *tmp = rem[i];
       tmp--;
     }
