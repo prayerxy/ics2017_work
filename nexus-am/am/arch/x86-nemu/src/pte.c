@@ -78,7 +78,7 @@ void _map(_Protect *p, void *va, void *pa) {
     pgtable=(PTE*)(palloc_f());
     *pde=PTE_ADDR(pgtable)|PTE_P;
   }
-  //二级页表 pte
+  //二级页表 pte  页表项储存物理索引 以及12位的符号位
   pgtable[PTX(va)]=PTE_ADDR(pa)|PTE_P;
 }
 

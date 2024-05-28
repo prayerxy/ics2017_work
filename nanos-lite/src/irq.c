@@ -5,6 +5,9 @@ static _RegSet* do_event(_Event e, _RegSet* r) {
     //8号事件
     case _EVENT_SYSCALL:
       return do_syscall(r);
+    case _EVENT_TRAP:
+      printf("内核自陷!\n");
+      return NULL;
     default: panic("Unhandled event ID = %d", e.event);
   }
 
