@@ -86,5 +86,22 @@ void _unmap(_Protect *p, void *va) {
 }
 
 _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *const argv[], char *const envp[]) {
-  return NULL;
+
+    //注意入栈的顺序是异常处理的相关顺序
+    //8 gprs,eflags, cs, eip, error code, irq，8 gprs
+    //一开始的8 gprs是参数
+
+    uint32_t *tmp = ustack.end;
+    uint32_t rem[30] = {
+      0, 0, 0, 0, 0, 0, 0, 0,            // 前8个GPRs (edi, esi, ebp, esp, ebx, edx, ecx, eax)
+      0x202, 0x8, (uint32_t)entry, 0x0,  // eflags, cs, eip, error code
+      0x81,                              // irq
+      0, 0, 0, 0, 0, 0, 0, 0             // 后8个GPRs (edi, esi, ebp, esp, ebx, edx, ecx, eax)
+    };
+    for (int i = 0; i < (8 + 5 + 8); i++) {
+      *tmp = rem[i];
+      tmp--;
+    }
+    tmp++; // 调整指针，指向陷阱帧起始位置
+    return (_RegSet*) tmp;
 }
