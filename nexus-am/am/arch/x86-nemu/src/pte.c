@@ -62,10 +62,24 @@ void _release(_Protect *p) {
 }
 
 void _switch(_Protect *p) {
+  //切换不同进程的地址空间
   set_cr3(p->ptr);
 }
 
 void _map(_Protect *p, void *va, void *pa) {
+  //功能:将虚拟地址空间p中的虚拟地址va映射到物理地址pa
+  //p->ptr为页目录基地址
+  PDE*pde=&((p->ptr)[PDX(va)]);
+  PTE*pgtable=NULL;
+  if(*pde&PTE_P){
+    pgtable=(PTE*)PTE_ADDR(*pde);
+  }
+  else{
+    pgtable=(PTE*)(palloc_f());
+    *pde=PTE_ADDR(pgtable)|PTE_P;
+  }
+  //二级页表 pte
+  pgtable[PTX(va)]=PTE_ADDR(pa)|PTE_P;
 }
 
 void _unmap(_Protect *p, void *va) {

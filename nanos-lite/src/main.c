@@ -29,9 +29,11 @@ int main() {
 
   init_fs();
   //加载用户程序  返回程序的入口地址
-  uint32_t entry = loader(NULL, "/bin/pal");
+  // uint32_t entry = loader(NULL, "/bin/pal");
   //跳转到用户程序入口执行
-  ((void (*)(void))entry)();
+  // ((void (*)(void))entry)();
+  load_prog("/bin/dummy");
+  
   
 
   panic("Should not reach here");
