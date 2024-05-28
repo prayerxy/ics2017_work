@@ -5,7 +5,8 @@ static _RegSet* do_event(_Event e, _RegSet* r) {
   switch (e.event) {
     //8号事件
     case _EVENT_SYSCALL:
-      return do_syscall(r);
+      do_syscall(r);
+      return schedule(r);
     case _EVENT_TRAP:
       printf("事件:内核自陷!\n");
       return schedule(r);
