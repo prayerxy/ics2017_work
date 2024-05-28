@@ -16,6 +16,25 @@ void free_page(void *p) {
 
 /* The brk() system call handler. */
 int mm_brk(uint32_t new_brk) {
+  if(current->cur_brk == 0){
+    current->cur_brk = current -> max_brk = new_brk;
+  }
+  else{
+    if(new_brk > current -> max_brk){
+      // TODO: map memory region [current->max_brk, new_brk)
+      // into address space current->as
+      uintptr_t vaddr = PGROUNDUP(current->max_brk);
+      //需要扩展堆区，进行映射
+      while(vaddr < new_brk){
+        _map(&current->as, (void*)vaddr, (void*)new_page());
+        vaddr += PGSIZE;
+      }
+      
+      current->max_brk = new_brk;
+    }
+
+    current->max_brk = new_brk;
+  }
   return 0;
 }
 
