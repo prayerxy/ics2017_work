@@ -30,9 +30,10 @@ static inline void do_sys_write(_RegSet*r){
   // Log("fd is not 1 or 2");
   SYSCALL_ARG1(r) = fs_write(fd, buf, len);
 }
-
+extern int mm_brk(uint32_t);
+//pa4新增
 static inline void do_sys_brk(_RegSet*r){
-  SYSCALL_ARG1(r) = 0;//表示堆区成功调整
+  SYSCALL_ARG1(r) =mm_brk(SYSCALL_ARG2(r));
 }
 
 static inline void do_sys_read(_RegSet*r){
