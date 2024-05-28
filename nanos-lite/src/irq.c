@@ -16,6 +16,6 @@ static _RegSet* do_event(_Event e, _RegSet* r) {
 }
 
 void init_irq(void) {
-  //事件处理函数
+  //事件处理函数  隐含一个参数-陷阱栈指针
   _asye_init(do_event);
 }
