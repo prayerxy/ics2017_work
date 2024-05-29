@@ -25,7 +25,7 @@ void load_prog(const char *filename) {
 
   pcb[i].tf = _umake(&pcb[i].as, stack, stack, (void *)entry, NULL, NULL);
 }
-
+int cur_flag=0;
 _RegSet* schedule(_RegSet *prev) {
   if(current!=NULL){
     current->tf=prev;//储存旧进程的Tf
@@ -33,7 +33,10 @@ _RegSet* schedule(_RegSet *prev) {
   //切换
   // current=&pcb[0];
   //分时复用
-  current=(current==&pcb[0]?&pcb[1]:&pcb[0]);
+  current=&pcb[0];
+  cur_flag++;
+  if(cur_flag==1000){cur_flag=0;current=&pcb[1];}
+  // current=(current==&pcb[0]?&pcb[1]:&pcb[0]);
   Log("we are now switching to pcb[0]\n");
   _switch(&current->as);
   return current->tf;
