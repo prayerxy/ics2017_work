@@ -37,7 +37,7 @@ _RegSet* schedule(_RegSet *prev) {
   cur_flag++;
   if(cur_flag==1000){cur_flag=0;current=&pcb[1];}
   // current=(current==&pcb[0]?&pcb[1]:&pcb[0]);
-  Log("we are now switching to pcb[0]\n");
+  // Log("we are now switching to pcb[0]\n");
   _switch(&current->as);
   return current->tf;
 }
