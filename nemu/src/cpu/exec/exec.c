@@ -232,7 +232,7 @@ make_EHelper(real) {
 static inline void update_eip(void) {
   cpu.eip = (decoding.is_jmp ? (decoding.is_jmp = 0, decoding.jmp_eip) : decoding.seq_eip);
 }
-#define TIME_IRQ 32
+#define TIMER_IRQ 32
 extern void raise_intr(uint8_t,vaddr_t);
 void exec_wrapper(bool print_flag) {
 #ifdef DEBUG
@@ -246,7 +246,7 @@ void exec_wrapper(bool print_flag) {
 
   if(cpu.INTR&cpu.IF){
     cpu.INTR=false;
-    raise_intr(TIME_IRQ,cpu.eip);
+    raise_intr(TIMER_IRQ,cpu.eip);
     update_eip();
   }
 #ifdef DEBUG

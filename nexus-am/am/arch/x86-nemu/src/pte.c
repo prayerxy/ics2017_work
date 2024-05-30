@@ -85,23 +85,36 @@ void _map(_Protect *p, void *va, void *pa) {
 void _unmap(_Protect *p, void *va) {
 }
 
+// _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *const argv[], char *const envp[]) {
+
+//     //注意入栈的顺序是异常处理的相关顺序
+//     //8 gprs,eflags, cs, eip, error code, irq，8 gprs
+//     //一开始的8 gprs是参数
+
+//     uint32_t *tmp = ustack.end;
+//     uint32_t rem[30] = {
+//       0, 0, 0, 0, 0, 0, 0, 0,            // ustack尾部多余值
+//       0x202, 0x8, (uint32_t)entry, 0x0,  // eflags, cs, eip, error code
+//       0x81,                              // irq
+//       0, 0, 0, 0, 0, 0, 0, 0             // 后8个GPRs (edi, esi, ebp, esp, ebx, edx, ecx, eax)
+//     };
+//     for (int i = 0; i < (8 + 5 + 8); i++) {
+//       *tmp = rem[i];
+//       tmp--;
+//     }
+//     tmp++; // 调整指针，指向陷阱帧起始位置
+//     return (_RegSet*) tmp;
+// }
 _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *const argv[], char *const envp[]) {
 
-    //注意入栈的顺序是异常处理的相关顺序
-    //8 gprs,eflags, cs, eip, error code, irq，8 gprs
-    //一开始的8 gprs是参数
+	*((uint32_t*)(ustack.end)-1)=(uint32_t)0;
+	*((uint32_t*)(ustack.end)-2)=(uint32_t)0;
+    //eflag
+    *((uint32_t*)(ustack.end)-4)=((0x00000002)|(1<<9));
+    //cs
+	*((uint32_t*)(ustack.end)-5)=0x8;
+	//eip
+	*((uint32_t*)(ustack.end)-6)=(uint32_t)entry;
 
-    uint32_t *tmp = ustack.end;
-    uint32_t rem[30] = {
-      0, 0, 0, 0, 0, 0, 0, 0,            // ustack尾部多余值
-      0x202, 0x8, (uint32_t)entry, 0x0,  // eflags, cs, eip, error code
-      0x81,                              // irq
-      0, 0, 0, 0, 0, 0, 0, 0             // 后8个GPRs (edi, esi, ebp, esp, ebx, edx, ecx, eax)
-    };
-    for (int i = 0; i < (8 + 5 + 8); i++) {
-      *tmp = rem[i];
-      tmp--;
-    }
-    tmp++; // 调整指针，指向陷阱帧起始位置
-    return (_RegSet*) tmp;
+  return (_RegSet*)((uint32_t*)(ustack.end)-16);
 }
