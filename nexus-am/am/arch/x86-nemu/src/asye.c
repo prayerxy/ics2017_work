@@ -18,6 +18,9 @@ _RegSet* irq_handle(_RegSet *tf) {
       //内核自陷
         ev.event=_EVENT_TRAP;
         break;
+      case 32:
+        ev.event=_EVENT_IRQ_TIME;
+        break;
       default: ev.event = _EVENT_ERROR; break;
     }
 
