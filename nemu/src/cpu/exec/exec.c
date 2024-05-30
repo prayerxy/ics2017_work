@@ -244,11 +244,6 @@ void exec_wrapper(bool print_flag) {
   //地址作为参数传进去，返回时decoding.seq_eip指向下一条指令的地址
   exec_real(&decoding.seq_eip);
 
-  if(cpu.INTR&cpu.IF){
-    cpu.INTR=false;
-    raise_intr(TIMER_IRQ,cpu.eip);
-    update_eip();
-  }
 #ifdef DEBUG
   int instr_len = decoding.seq_eip - cpu.eip;
   sprintf(decoding.p, "%*.s", 50 - (12 + 3 * instr_len), "");
@@ -269,4 +264,9 @@ void exec_wrapper(bool print_flag) {
   void difftest_step(uint32_t);
   difftest_step(eip);
 #endif
+  if(cpu.INTR&cpu.IF){
+    cpu.INTR=false;
+    raise_intr(TIMER_IRQ,cpu.eip);
+    update_eip();
+  }
 }
