@@ -7,6 +7,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
    */
   //首先将eflags、cs、eip值压入堆栈
   rtl_push(&cpu.eflags);
+  cpu.IF=0; //避免中断嵌套
   rtl_push(&cpu.cs);
   rtl_push(&ret_addr);
 
@@ -22,4 +23,6 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
 }
 
 void dev_raise_intr() {
+  //将INTR引脚设置为高电平
+  cpu.INTR=true;
 }
