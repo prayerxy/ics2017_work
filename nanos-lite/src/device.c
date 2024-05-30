@@ -15,6 +15,10 @@ size_t events_read(void *buf, size_t len) {
     key ^= 0x8000;
     isDown = true;
   }
+  if(isDown && key==_KEY_F12){
+    extern void changeGame();
+    changeGame();
+  }
   //返回系统启动后的时间
   if(key == _KEY_NONE) {
     unsigned long t = _uptime();
