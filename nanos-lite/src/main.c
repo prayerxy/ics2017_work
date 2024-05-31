@@ -32,8 +32,8 @@ int main() {
   // uint32_t entry = loader(NULL, "/bin/pal");
   //跳转到用户程序入口执行
   // ((void (*)(void))entry)();
-  load_prog("/bin/pal");
-  load_prog("/bin/hello");
+  // load_prog("/bin/pal");
+  // load_prog("/bin/hello");
   load_prog("/bin/videotest");
   
   _trap();
