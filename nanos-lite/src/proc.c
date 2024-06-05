@@ -35,11 +35,11 @@ _RegSet* schedule(_RegSet *prev) {
     current->tf=prev;//储存旧进程的Tf
   }
   //切换
-  // current=&pcb[0];
+  current=&pcb[0];
   //分时复用
-  current=&pcb[cur_game];
-  cur_flag++;
-  if(cur_flag==1000){cur_flag=0;current=&pcb[1];}
+  // current=&pcb[cur_game];
+  // cur_flag++;
+  // if(cur_flag==1000){cur_flag=0;current=&pcb[1];}
   // current=(current==&pcb[0]?&pcb[1]:&pcb[0]);
   // Log("we are now switching to pcb[0]\n");
   _switch(&current->as);
