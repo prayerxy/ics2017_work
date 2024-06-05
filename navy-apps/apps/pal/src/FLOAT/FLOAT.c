@@ -14,7 +14,7 @@ FLOAT F_div_F(FLOAT a, FLOAT b) {
   m=m%n;
   for(int i=0;i<16;i++){
     res<<=1;
-    m<=1;
+    m<<=1;
     if(m>=n){m-=n;res|=1;}
   }
   if (((a ^ b) & 0x80000000) == 0x80000000) {
@@ -44,7 +44,7 @@ FLOAT f2F(float a) {
   union float_ f;
   f.value = *((uint32_t*)(void*)&a);
   int e=f.e-127;//真实的指数位
-  uint32_t res;
+  FLOAT res;
   uint32_t temp;
   //-127与128
   //已经左移23位，现在右移动7位修正，然后指数e左移动
@@ -63,8 +63,7 @@ FLOAT f2F(float a) {
   else{
     res=temp<<(e-7);
   }
-  return 0;
-  // return f.signal==0?res:-res;
+  return f.signal==0?res:(res|(1<<31));
 }
 
 FLOAT Fabs(FLOAT a) {
