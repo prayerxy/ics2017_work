@@ -15,12 +15,12 @@ FLOAT F_div_F(FLOAT a, FLOAT b) {
   for(int i=0;i<16;i++){
     res<<=1;
     m<<=1;
-    if(m>=n){m-=n;res|=1;}
+    if(m>=n){m-=n;res++;}
   }
   if (((a ^ b) & 0x80000000) == 0x80000000) {
     res=-res;
   }
-  return 0;
+  return res;
 }
 
 FLOAT f2F(float a) {
