@@ -63,7 +63,8 @@ FLOAT f2F(float a) {
   else{
     res=temp<<(e-7);
   }
-  return f.signal==0?res:-res;
+  return 0;
+  // return f.signal==0?res:-res;
 }
 
 FLOAT Fabs(FLOAT a) {
